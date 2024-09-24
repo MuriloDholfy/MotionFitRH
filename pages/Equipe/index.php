@@ -32,9 +32,9 @@ if (isset($_SESSION['user_id'])) {
 
         // Verifica se o tipo de usuário é gerente ou gerente regional
         if ($_SESSION['tipoUsuario'] === 'adm' || $_SESSION['tipoUsuario'] === 'gerenteRegional') {
-            $_SESSION['access_denied'] = true;
+            $_SESSION['access_denied'] = false;
         }
-    } else {
+        } else {
         $_SESSION['access_denied'] = true;
     }
 } else {
