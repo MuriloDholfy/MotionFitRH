@@ -1,0 +1,134 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.sidebar {
+    height: 100vh;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #333;
+    padding-top: 20px;
+}
+
+.sidebar a {
+    padding: 15px;
+    text-decoration: none;
+    font-size: 18px;
+    color: white;
+    display: block;
+}
+
+.sidebar a:hover {
+    background-color: #575757;
+}
+
+.content {
+    margin-left: 260px;
+    padding: 10px;
+    width: 75%; /* Reduz a largura */
+}
+
+h1 {
+    color: #333;
+    font-size: 20px; /* Reduz o tamanho da fonte */
+    margin-bottom: 10px; /* Reduz o espaçamento inferior */
+}
+
+/* Estilo da seta */
+.back-arrow {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    font-size: 20px; /* Reduz o tamanho da seta */
+    background-color: transparent;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.back-arrow:hover {
+    color: #575757;
+}
+
+/* Estilo da tabela */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px; /* Reduz o espaçamento superior */
+    overflow-x: auto;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 6px; /* Reduz o padding das células */
+    text-align: left;
+    font-size: 12px; /* Reduz o tamanho da fonte */
+}
+
+th {
+    background-color: #333;
+    color: white;
+}
+
+/* Estilo dos botões de CRUD */
+.crud-icons {
+    font-size: 14px; /* Reduz o tamanho dos ícones */
+    margin-right: 6px;
+    cursor: pointer;
+}
+
+.create {
+    color: green;
+}
+
+.update {
+    color: orange;
+}
+
+.restore {
+    color: blue;
+}
+
+.delete {
+    color: red;
+}
+
+.crud-icons:hover {
+    opacity: 0.7;
+}
+
+/* Estilo da paginação */
+.pagination {
+    position: fixed;
+    bottom: 20px;
+    left: 50%; /* Ajusta o alinhamento horizontal */
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 1000;
+}
+
+.pagination a, .pagination strong {
+    display: inline-block;
+    padding: 6px 12px; /* Reduz o padding */
+    margin: 0 2px; /* Reduz o espaçamento */
+    text-decoration: none;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.pagination a:hover {
+    background-color: #f0f0f0;
+}
+
+.pagination strong {
+    background-color: #333;
+    color: #fff;
+    border-color: #333;
+}

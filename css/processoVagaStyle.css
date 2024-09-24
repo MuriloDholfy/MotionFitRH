@@ -1,0 +1,377 @@
+
+.card-radio {
+  font-size: 20px;
+  background-color: transparent;
+  padding: 1em;
+  z-index: 5;
+  width: 40rem;
+  max-width: 1800px;
+  transition: 200ms ease-in-out;
+  
+}
+.card-projeto {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 30px;
+    width: 20rem;
+    height: 11.5rem;
+    background-color: #30344c;
+    padding: 1em;
+    z-index: 5;
+    box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    max-width: 300px;
+    transition: 200ms ease-in-out;
+}
+
+.radio-inputs {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    border-radius: 0.5rem;
+    background-color: transparent;
+    box-sizing: border-box;
+    box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06);
+    padding: 0.25rem;
+    width: 300px;
+    font-size: 14px;
+  }
+  .card-grande {
+    font-size: 20px;
+    background-color: #30344c;
+    padding: 1em;
+    z-index: 5;
+    box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    max-width: 900px;
+    transition: 200ms ease-in-out;
+}
+  .radio-inputs .radio {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+  
+  .radio-inputs .radio input {
+    display: none;
+  }
+  
+  .radio-inputs .radio .name {
+    background-color: #30344c;
+    margin: 2px;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    border: none;
+    padding: .5rem 0;
+    color: rgb(139, 211, 52);
+    transition: all .15s ease-in-out;
+  }
+  
+  .radio-inputs .radio input:checked + .name {
+    background-color: rgb(139, 211, 52);
+    color: white;
+    font-weight: 600;
+  }
+
+  
+  .button-inputs {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    border-radius: 0.5rem;
+    background-color: transparent;
+    box-sizing: border-box;
+    box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06);
+    padding: 0.25rem;
+    width: 300px;
+    font-size: 24px;
+  }
+  
+  .button-inputs .button {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+  
+  .button-inputs .button input {
+    display: none;
+  }
+  
+  .button-inputs .button .name {
+    background-color:  rgb(139, 211, 52);
+    margin: 2px;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    border: none;
+    padding: .5rem 0;
+    color: white;
+    transition: all .15s ease-in-out;
+  }
+  
+  .button-inputs .button input:hover + .name {
+    background-color: #fff;
+    color: rgb(139, 211, 52);
+    font-weight: 600;
+  }
+  @import url("https://fonts.googleapis.com/css?family=Muli:700");
+:root {
+  --background-modal-color: #fff;
+  --body-color: #fff;
+  --color-timeline-default: #D2D3D8;
+  --color-step-completed: #5C6174;
+  --color-checkmark-completed: #fff;
+  --color-in-progress: #13CB8F;
+  --color-label-default: var(--color-timeline-default);
+  --color-label-completed: var(--color-step-completed);
+  --color-label-loading: var(--color-in-progress);
+  --color-icon-completed: var(--color-step-completed);
+  --color-icon-default: var(--color-timeline-default);
+}
+:root.dark-mode {
+  --color-checkmark-completed: #fff;
+  --background-modal-color: #5C6174;
+  --color-timeline-default: #9799A3;
+  --color-checkmark-completed: var(--background-modal-color);
+  --body-color: #fff;
+  --color-step-completed: #fff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.wrapper {
+  font-family: "Muli", sans-serif;
+  background: var(--body-color);
+  padding: 0;
+  margin: 0;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.toggle {
+  transform: scale(0.8);
+  position: absolute;
+  bottom: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  max-width: 140px;
+}
+.toggle span {
+  margin: 0 0.5rem;
+}
+.toggle input[type=checkbox] {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+}
+.toggle input[type=checkbox]:checked + label {
+  background: #13CB8F;
+}
+ .toggle input[type=checkbox]:checked + label:after {
+  left: calc(100% - 2px);
+  transform: translateX(-100%);
+}
+ .toggle label {
+  cursor: pointer;
+  width: 75px;
+  height: 34px;
+  background: #D2D3D8;
+  display: block;
+  border-radius: 40px;
+  position: relative;
+}
+.toggle label:after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 30px;
+  height: 30px;
+  background: #fff;
+  border-radius: 40px;
+  transition: 0.3s;
+}
+.main-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: all 200ms ease;
+  background: var(--background-modal-color);
+  height: 220px;
+  min-width: 420px;
+  max-width: 750px;
+  flex-grow: 1;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.14);
+}
+.main-container .steps-container {
+  padding: 40px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.main-container .steps-container .step {
+  z-index: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 200ms ease;
+  flex-grow: 0;
+  height: 15px;
+  width: 15px;
+  border: 4px solid var(--color-timeline-default);
+  border-radius: 50%;
+}
+ .main-container .steps-container .step .preloader, body .main-container .steps-container .step svg {
+  display: none;
+}
+.main-container .steps-container .step.completed {
+  width: 18px;
+  height: 18px;
+  background: var(--color-step-completed);
+  border: none;
+}
+.main-container .steps-container .step.completed svg {
+  transition: all 200ms ease;
+  display: block;
+  height: 10px;
+  width: 10px;
+  fill: var(--color-checkmark-completed);
+}
+.main-container .steps-container .step.in-progress {
+  width: 18px;
+  height: 18px;
+  background: var(--color-in-progress);
+  border: none;
+}
+.main-container .steps-container .step.in-progress .preloader {
+  display: block;
+  height: 10px;
+  width: 10px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  border-left-color: transparent;
+  animation-name: spin;
+  animation-duration: 2000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+.main-container .steps-container .step .label {
+  position: absolute;
+  top: 30px;
+  filter: none;
+  z-index: 2000;
+  color: var(--color-label-default);
+  transition: all 200ms ease;
+  font-weight: 700;
+}
+.main-container .steps-container .step .label.completed {
+  color: var(--color-label-completed);
+}
+body .main-container .steps-container .step .label.loading {
+  color: var(--color-label-loading);
+}
+.main-container .steps-container .step .icon {
+  font-size: 40px;
+  position: absolute;
+  top: -60px;
+  color: var(--color-icon-default);
+  transition: color 200ms ease;
+}
+.main-container .steps-container .step .icon.completed {
+  color: var(--color-icon-completed);
+}
+.main-container .steps-container .step .icon.in-progress {
+  color: var(--color-in-progress);
+}
+.main-container .steps-container .line {
+  transition: all 200ms ease;
+  height: 2px;
+  flex-grow: 1;
+  max-width: 120px;
+  background: var(--color-timeline-default);
+}
+.main-container .steps-container .line.completed {
+  background: var(--color-step-completed);
+}
+.main-container .steps-container .line.next-step-uncomplete {
+  background: linear-gradient(to right, var(--color-step-completed), var(--color-timeline-default));
+}
+.main-container .steps-container .line.next-step-in-progress {
+  background: linear-gradient(to right, var(--color-step-completed), var(--color-in-progress));
+}
+.main-container .steps-container .line.prev-step-in-progress {
+  background: linear-gradient(to right, var(--color-in-progress), var(--color-timeline-default));
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.progress-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: relative;
+  padding: 5px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  background-color: transparent;
+  border-radius: 5px;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 1;
+}
+
+.stage {
+  z-index: 2;
+  position: relative;
+  background-color: #fff;
+  color: #93c01f;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.stage.completed {
+  background-color: #93c01f;
+  color: white;
+}
+
+.stage-title {
+  font-size: 18px;
+  position: relative;
+  top: 40px;
+  width: 100px;
+  text-align: center;
+  color: white;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}

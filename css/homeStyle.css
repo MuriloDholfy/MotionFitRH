@@ -1,0 +1,530 @@
+body {
+    
+    background-color: #181c2b;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+.card-projeto {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 30px;
+    width: 19rem;
+    height: 11.5rem;
+    background-color: #30344c;
+    padding: 1em;
+    z-index: 5;
+    border-radius: 10px;
+}
+.container {
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 15px;
+}
+
+.navbar {
+    display: flex;  
+    align-items: center;
+    justify-content: space-between;
+    background-color: transparent;
+}
+
+.nav-logo img {
+    height: 50px;
+}
+
+.search {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.search__input {
+    font-family: inherit;
+    font-size: inherit;
+    background-color: #30344c;
+    border: none;
+    color: #646464;
+    padding: 0.7rem 1.5rem;
+    border-radius: 10px;
+    width: 15em;
+    transition: all ease-in-out .5s;
+    margin-right: -2rem;
+}
+
+.search__input:hover, .search__input:focus {
+    box-shadow: 0 0 1em #22ff0513;
+}
+
+.search__input:focus {
+    outline: none;
+    background-color: rgb(255, 255, 255);
+}
+
+.search__input::-webkit-input-placeholder {
+    font-weight: 100;
+    color: rgb(147, 204, 76);
+}
+
+.search__input:focus + .search__button {
+    background-color: transparent;
+}
+
+.search__button {
+    border: none;
+    background-color: transparent;
+    margin-top: .1em;
+}
+
+.search__button:hover {
+    cursor: pointer;
+}
+
+.search__icon {
+    height: 1.3em;
+    width: 1.3em;
+    fill: #93CC4C;
+}
+
+.nav-profile img {
+    height: 40px;
+    border-radius: 100%;
+    background-color: #32333a;
+    padding: 5px;
+}
+
+.sidebarbox{
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+    height: 50%;
+}
+
+.sidebar { 
+    align-items: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    background-color: #30344c;
+    width: 4rem;
+    height: 25rem;
+    border-radius: 30px;
+    margin-top: 10px;
+}
+
+.sidebar2 {
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    background-color: transparent;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 100px;
+}
+
+.sidebar3 {
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    background-color: transparent;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 100px;
+}
+
+.sidebar-logo {
+    display: block;
+    color: #30344c;
+    text-decoration: none;
+    text-align: center;
+}
+
+.power {
+    display: block;
+    padding: 1rem;
+    color: #30344c;
+    text-decoration: none;
+    text-align: center;
+}
+
+.sidebar-logo svg {
+    width: 2.5rem;
+    height: auto;
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: auto;
+}
+
+.nav-item {
+    width: 100%;
+    margin-top: 45px;
+}
+
+.nav-link {
+    display: block;
+    padding: 1rem;
+    color: #30344c;
+    text-decoration: none;
+    text-align: center;
+}
+
+.nav-link.active {
+    height: 100%;
+    stroke: #93CC4C;
+    transition: stroke 10ms ease-in-out, filter 10ms ease-in-out;
+}
+
+.nav-link:hover {
+    margin-right: 0px;
+    stroke: #93CC4C;
+    filter: drop-shadow(0px 0px 10px #93CC4C);
+}
+
+.dropdown {
+    border-radius: 100px;
+}
+
+.dropdown-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    color: #30344c;
+    text-decoration: none;
+    background: none;
+    border: none;
+}
+
+.dropdown-menu {
+    text-align: left;
+}
+
+.dropdown-item {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: #30344c;
+    text-decoration: none;
+}
+
+.rounded-circle {
+    border-radius: 50%;
+}
+
+.box {
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    display: flex;
+    flex: 1;
+}
+
+.card {
+    font-size: 20px;
+    width: 20rem;
+    background-color: #30344c;
+    padding: 1em;
+    z-index: 5;
+    box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    max-width: 300px;
+    transition: 200ms ease-in-out;
+}
+
+.card-grande {
+    font-size: 20px;
+    background-color: #30344c;
+    padding: 1em;
+    z-index: 5;
+    height: 23.4rem;
+    box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    max-width: 300px;
+    transition: 200ms ease-in-out;
+}
+
+.card-feed {
+    font-size: 20px;
+    background-color: #30344c;
+    padding: 1em;
+    z-index: 5;
+    width: 40rem;
+    box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    max-width: 1800px;
+    transition: 200ms ease-in-out;
+}
+
+.username {
+    color: #C6E1ED;
+    font-size: 0.85em;
+    font-weight: 600;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-body .card-text {
+    margin: 0 10px 0 0;
+    white-space: pre-line;
+    color: #e2e2e2;
+    font-weight: 400;
+    line-height: 1.5;
+    margin-bottom: 4px;
+}
+
+.card-footer {
+    position: relative;
+    width: 100%;                
+    color: #93CC4C;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: none;
+}
+
+.card-footer div {
+    margin-right: 1rem;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.card-footer svg {
+    margin-right: 5px;
+    height: 100%;
+    stroke: #93CC4C;
+}
+
+.viewer span {
+    height: 20px;
+    width: 20px;
+    background-color: #93CC4C;
+    margin-right: -6px;
+    border-radius: 50%;
+    border: 1px solid #fff;
+    display: grid;
+    align-items: center;
+    text-align: center;
+    font-weight: bold;
+    font-size: 8px;
+    color: #fff;
+    padding: 2px;
+}
+
+.viewer span svg {
+    stroke: #fff;
+}
+
+@media (max-width: 1200px) {
+    .card, .card-projeto {
+        width: 16.5rem;
+        font-size: 18px;
+    }
+    .card-feed {
+        width: 34rem;
+        font-size: 18px;
+    }
+    .card-grande {
+        font-size: 18px;
+        width: 16.5rem;
+    }
+}
+
+@media (max-width: 995px) {
+    .card, .card-projeto {
+        width: 12.5rem;
+        font-size: 16px;
+    }
+    .card-feed {
+        width: 25.5rem;
+        font-size: 16px;
+    }
+    .card-grande {
+        width: 12.5rem;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 770px) {
+    .card, .card-projeto {
+        width: 10.5rem;
+        font-size: 16px;
+    }
+    .card-feed {
+        width: 10.5rem;
+        font-size: 16px;
+    }
+    .card-grande {
+        width: 10.5rem;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 576px) {
+    .card {
+        width: 12.5rem;
+        font-size: 16px;
+    }
+    .card-grande {
+        width: 12.5rem;
+        font-size: 16px;
+    }
+    .card-feed {
+        width: 22.5rem;
+        font-size: 16px;
+    }
+}
+
+.modal-dialog{
+    border-radius: 30px;
+
+}
+.modal {
+    text-align: left;
+    color: rgb(147, 204, 76);
+    -rborderadius: 30px;
+}
+
+.modal-select {
+    text-align: left;
+    font-family: inherit;
+    font-size: inherit;
+    background-color: #30344c;
+    border: none;
+    color: #646464;
+    padding: 0.7rem 1.5rem;
+    border-radius: 30px;
+    width: 100%; /* Ajuste conforme necessário */
+    transition: all ease-in-out .5s;
+    margin-right: -2rem; /* Ajuste conforme necessário */
+}
+
+.modal-select:hover, .modal-select:focus {
+    box-shadow: 0 0 1em #22ff0513;
+    outline: none;
+    background-color: rgb(255, 255, 255);
+}
+
+.modal-select option {
+    font-weight: 100;
+    color: rgb(147, 204, 76);
+    background-color: rgb(255, 255, 255);
+
+}
+.modal-select option:hover {
+    font-weight: 100;
+    color: rgb(19, 18, 18);
+    background-color: rgb(147, 204, 76);
+
+}
+
+.modal-select:focus {
+    color: #30344c;
+}
+.modal-dialog {
+    max-width: 800px; /* Aumenta a largura do formulário */
+}
+
+.modal-header {
+    border-bottom: none; /* Remove a linha que separa o título do restante */
+}
+
+.modal-select {
+    text-align: left;
+    font-family: inherit;
+    font-size: inherit;
+    background-color: #30344c;
+    border: none;
+    color: #646464;
+    padding: 0.7rem 1.5rem;
+    border-radius: 30px;
+    width: 100%;
+    transition: all ease-in-out .3s; /* Ajuste para transição mais suave */
+    margin-right: -2rem;
+}
+
+.modal-select:hover, .modal-select:focus {
+    background-color: #1f2a36; /* Cor de fundo mais escura no hover */
+    color: #93CC4C; /* Texto verde */
+    transform: scale(1.05); /* Aumenta o tamanho do select em 5% */
+    box-shadow: 0 0 1em #22ff0513;
+    outline: none;
+}
+
+.modal-select option {
+    font-weight: 100;
+    color: #30344c;
+    background-color: rgb(255, 255, 255);
+}
+
+.modal-select option:hover {
+    font-weight: 100;
+    color: rgb(19, 18, 18);
+    background-color: rgb(147, 204, 76);
+}
+.modal-content{
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, .2);
+    border-radius: 0.5rem;
+    outline: 0;
+}
+.btn-form {
+    border-color: #93CC4C;
+    border-width: 1px;
+    background-color: #93CC4C;
+    color: #000; /* Texto preto */
+    transition: all 0.3s ease;
+}
+
+.btn-form:hover {
+    background-color: #1f2a36; /* Cor de fundo mais escura no hover */
+    color: #93CC4C; /* Texto verde */
+    border-color: #1f2a36;
+    transform: scale(1.05); /* Aumenta o botão em 5% */
+}
+/* Estiliza o botão de fechar */
+.modal-header .close {
+    color: #000; /* Cor padrão do botão */
+    font-size: 10px; /* Tamanho padrão */
+    transition: color 0.3s ease, transform 0.3s ease; /* Suaviza a transição */
+        transform: scale(2.2); /* Aumenta um pouco o botão */
+
+}
+
+/* Efeito hover */
+.modal-header .close:hover {
+    color: #93CC4C; /* Altera a cor para verde no hover */
+    transform: scale(2.0); /* Aumenta o botão em 5% */
+}
+.card-grande .card-footer {
+    font-size: 1.2em; /* Diminui o tamanho da fonte */
+  }
