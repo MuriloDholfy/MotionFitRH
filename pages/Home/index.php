@@ -128,20 +128,20 @@ $conn->close();
                             <div class="col-md-6">
                                 <?php if ($_SESSION['tipoUsuario'] === 'gerenteRegional') : ?>
                                     <div class="card-projeto nav-link">
-                                        <a href="../consultarChamado/index.php" class="nav-link">
-                                            <div class="card-body">
-                                                <p class="card-text">Consultar Vagas</p>
-                                            </div>
-                                        </a>
-                                    </div>
-                                <?php else : ?>
-                                    <div class="card-projeto nav-link">
-                                        <a href="../Projetos/vagas.php" class="nav-link">
-                                            <div class="card-body">
-                                                <p class="card-text">Consultar Vagas</p>
-                                            </div>
-                                        </a>
-                                    </div>
+                                    <a href="../Projetos/vagas.php" class="nav-link">
+                                        <div class="card-body">
+                                            <p class="card-text">Consultar Vagas</p>
+                                        </div>
+                                    </a>
+                                </div>
+                                    <?php else : ?>
+                                        <div class="card-projeto nav-link">
+                                            <a href="../consultarChamado/index.php" class="nav-link">
+                                                <div class="card-body">
+                                                    <p class="card-text">Consultar Vagas</p>
+                                                </div>
+                                            </a>
+                                        </div>
                                 <?php endif; ?>
                             </div>
                         </div>
