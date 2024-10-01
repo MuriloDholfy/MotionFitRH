@@ -1,5 +1,6 @@
 <?php
-$conn = new mysqli('localhost', 'root', '', 'bdmotion');
+$conn = new mysqli('50.116.86.123', 'motionfi_contato
+', '', 'bdmotion');
 
 if ($conn->connect_error) {
     die("Conexão falhou: " . $conn->connect_error);

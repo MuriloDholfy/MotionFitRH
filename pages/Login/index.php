@@ -16,7 +16,7 @@
     background-size: cover;
     background-position: center; 
     background-repeat: no-repeat; 
-}
+    }
     .esquerdo {
         height: 100%;
     }
@@ -37,7 +37,7 @@
         transition: 200ms ease-in-out;
         box-shadow: 0px 0px 0px rgba(0, 0, 0, 0)
     }
-  
+    
     label {
     text-align: left;
     display: block;

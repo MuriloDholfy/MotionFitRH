@@ -2,11 +2,12 @@
 session_start();
 
 // Conectar ao banco de dados
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "bdmotion";
+$servername = "50.116.86.123/pages/Login/";
+$username = "motionfi_contato
+";
+$password = "68141096@Total";
 
+$dbname = "motionfi_bdmotion";
 // Criar conexão
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -107,7 +108,7 @@ $conn->close();
                     <form action="../criarCandidato/process.php" method="POST">
                         <div class="row">
                             <div class="form-group col-6">
-                                <label for="nome">Nome</label>
+                                <label for="nome">Nome Completo</label>
                                 <input type="text" class="form-control" id="nome" name="nome" required>
                             </div>
                             <div class="form-group col-6">

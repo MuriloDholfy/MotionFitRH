@@ -5,11 +5,12 @@
     // Verificar se o usuário está autenticado
 
     // Conectar ao banco de dados
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "bdmotion";
+    $servername = "50.116.86.123";
+    $username = "motionfi_contato
+";
+    $password = "68141096@Total";
 
+    $dbname = "motionfi_bdmotion";
     // Criar conexão
     $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -120,7 +121,8 @@
                                         <small class="text">
                                                     <?php
                                                     // Conectar ao banco de dados
-                                                    $conn = new mysqli('localhost', 'root', '', 'bdmotion');
+                                                    $conn = new mysqli('50.116.86.123', 'motionfi_contato
+', '', 'bdmotion');
                                                     if ($conn->connect_error) {
                                                         die("Conexão falhou: " . $conn->connect_error);
                                                     }
@@ -151,7 +153,8 @@
                                         <small class="text">
                                                     <?php
                                                     // Conectar ao banco de dados
-                                                    $conn = new mysqli('localhost', 'root', '', 'bdmotion');
+                                                    $conn = new mysqli('50.116.86.123', 'motionfi_contato
+', '', 'bdmotion');
                                                     if ($conn->connect_error) {
                                                         die("Conexão falhou: " . $conn->connect_error);
                                                     }
@@ -210,11 +213,12 @@
                                 </div>
                                 <?php
                                 // Conectar ao banco de dados
-                                $servername = "localhost";
-                                $username = "root";
-                                $password = "";
-                                $dbname = "bdmotion";
+                                $servername = "50.116.86.123";
+                                $username = "motionfi_contato
+";
+                                $password = "68141096@Total";
 
+                                $dbname = "motionfi_bdmotion";
                                 // Criar conexão
                                 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -247,11 +251,12 @@
                                 </div>
                                     <?php
                                         // Conectar ao banco de dados
-                                        $servername = "localhost";
-                                        $username = "root";
-                                        $password = "";
-                                        $dbname = "bdmotion";
+                                        $servername = "50.116.86.123";
+                                        $username = "motionfi_contato
+";
+                                        $password = "68141096@Total";
 
+                                        $dbname = "motionfi_bdmotion";
                                         // Criar conexão
                                         $conn = new mysqli($servername, $username, $password, $dbname);
 

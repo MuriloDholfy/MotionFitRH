@@ -1,9 +1,10 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "bdmotion";
+$servername = "50.116.86.123";
+$username = "motionfi_contato
+";
+$password = "68141096@Total";
 
+$dbname = "motionfi_bdmotion";
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 if ($conn->connect_error) {

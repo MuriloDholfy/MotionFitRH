@@ -7,11 +7,12 @@ if (!isset($_SESSION['user_id'])) {
     die("Erro: Usuário não está autenticado.");
 }
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "bdmotion";
+$servername = "50.116.86.123";
+$username = "motionfi_contato
+";
+$password = "68141096@Total";
 
+$dbname = "motionfi_bdmotion";
 // Cria a conexão
 $conn = new mysqli($servername, $username, $password, $dbname);
 

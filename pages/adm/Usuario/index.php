@@ -62,11 +62,12 @@
                 <tbody>
                     <?php
                     // Conectando ao banco de dados MySQL
-                    $servername = "localhost";
-                    $username = "root";
-                    $password = "";
-                    $dbname = "bdmotion";
+                    $servername = "50.116.86.123";
+                    $username = "motionfi_contato
+";
+                    $password = "68141096@Total";
 
+                    $dbname = "motionfi_bdmotion";
                     // Criando a conexão
                     $conn = new mysqli($servername, $username, $password, $dbname);
 

@@ -67,7 +67,7 @@
                                 <input placeholder="Digite a senha" type="password" id="senha" name="senha" required>
                             </div>
                             <button class="submit" type="submit">Login</button>
-                            <a href="../../Login/" class="btn btn-secondary mt-2">Back</a>  <!-- Botão "Back" como link -->
+                            <a href="../../Login/" class="btn btn-secondary mt-2">Back</a> <!-- Botão "Back" como link -->
                         </form>
                     </div>
                 </div>

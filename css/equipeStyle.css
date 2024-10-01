@@ -119,7 +119,8 @@
     font-weight: 600;
   }
   @import url("https://fonts.googleapis.com/css?family=Muli:700");
-:root {
+:motionfi_contato
+ {
   --background-modal-color: #fff;
   --body-color: #fff;
   --color-timeline-default: #D2D3D8;
@@ -132,7 +133,8 @@
   --color-icon-completed: var(--color-step-completed);
   --color-icon-default: var(--color-timeline-default);
 }
-:root.dark-mode {
+:motionfi_contato
+.dark-mode {
   --color-checkmark-completed: #fff;
   --background-modal-color: #5C6174;
   --color-timeline-default: #9799A3;
