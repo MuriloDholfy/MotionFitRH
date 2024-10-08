@@ -23,20 +23,20 @@ if (!isset($_SESSION['user_id']) || $_SESSION['tipoUsuario'] !== 'gerenteRegiona
 }
 
 // Verifica se o ID do candidato e os dados do formulário foram enviados
-if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $idCandidato = intval($_GET['id']);
-    $nome = $_POST['nome'];
-    $email = $_POST['email'];
-    $telefone = $_POST['telefone'];
-    $triagem = $_POST['triagem'];
-    $dataEntrevista = $_POST['dataEntrevista'];
-    $dataAprovacaoEntrevista = $_POST['dataAprovacaoEntrevista'];
-    $caju = $_POST['caju'];
-    $registro = $_POST['registro'];
-    $dataRegistro = $_POST['dataRegistro'];
-    $ponto = $_POST['ponto'];
-    $contratoAssinado = $_POST['contratoAssinado'];
-    $uniforme = $_POST['uniforme'];
+if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'POST') {  
+    $idCandidato = intval($_GET['id']);  
+    $nome = $_POST['nome'];  
+    $email = $_POST['email'];  
+    $telefone = $_POST['telefone'];  
+    $triagem = $_POST['triagem'];  
+    $dataEntrevista = $_POST['dataEntrevista'];  
+    $dataAprovacaoEntrevista = $_POST['dataAprovacaoEntrevista'];  
+    $caju = $_POST['caju'];  
+    $registro = $_POST['registro'];  
+    $dataRegistro = $_POST['dataRegistro'];  
+    $ponto = $_POST['ponto'];  
+    $contratoAssinado = $_POST['contratoAssinado'];  
+    $uniforme = $_POST['uniforme'];  
 
 // Atualize sua consulta SQL de UPDATE para incluir esses campos.
 

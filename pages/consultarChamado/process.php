@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+?>
 // Conectar ao banco de dados
 $servername = "<!DOCTYPE html>
 <html lang="pt-BR">
@@ -67,8 +67,7 @@ $servername = "<!DOCTYPE html>
                     <?php
                     // Conectando ao banco de dados MySQL
                     $servername = "50.116.86.123";
-                    $username = "motionfi_contato
-";
+                    $username = "motionfi_contato";
                     $password = "68141096@Total";
 
                     $dbname = "motionfi_bdmotion";
@@ -150,7 +149,7 @@ $servername = "<!DOCTYPE html>
                 if ($i == $pagina) {
                     echo "<strong>$i</strong>";
                 } else {
-                    echo "<a href='?pagina=$i'>$i</a>";
+                    echo "<a href='?pagina=$i'>$i</a>";                                                         
                 }
             }
 
@@ -351,11 +350,9 @@ $servername = "<!DOCTYPE html>
     </script>
 </body>
 </html>
-";
-$username = "motionfi_contato
-";
+<?php
+$username = "motionfi_contato";
 $password = "68141096@Total";
-
 $dbname = "motionfi_bdmotion";
 // Criar conexão
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -405,4 +402,5 @@ $conn->close();
 // Redirecionar de volta para a página de detalhes da vaga
 header("Location: detalhesVaga.php?id=$id");
 exit();
+
 ?>

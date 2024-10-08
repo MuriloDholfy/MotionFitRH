@@ -152,11 +152,10 @@ $conn->close();
 
                     // Conectar ao banco de dados
                     $servername = "50.116.86.123";
-                    $username = "motionfi_contato
-";
+                    $username = "motionfi_contato";
                     $password = "68141096@Total";
-
                     $dbname = "motionfi_bdmotion";
+
                     // Criar conexão
                     $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -251,6 +250,7 @@ $conn->close();
                         echo '<tbody>';
 
                         while ($row = $result->fetch_assoc()) {
+
                             // Verificação segura dos valores
                             // $idCandidato = isset($row['idCandidato']) ? htmlspecialchars($row['idCandidato']) : 'N/A';
                             $nomeCandidato = isset($row['nomeCandidato']) ? htmlspecialchars($row['nomeCandidato']) : 'N/A';
@@ -269,7 +269,6 @@ $conn->close();
                             echo "    <td><a href='detalhesCandidato.php?id={$row['idCandidato']}' class='btn-green btn btn'>Detalhes</a></td>";
                             echo '  </tr>';
                         }
-
                         echo '</tbody>';
                         echo '</table>';
 

@@ -12,18 +12,25 @@ if (!isset($_SESSION['user_id'])) {
 // Obter o ID do usuário
 $user_id = $_SESSION['user_id'];
 
-// Conectar ao banco de dados
+// Credenciais do banco de dados
 $servername = "50.116.86.123";
 $username = "motionfi_contato";
-$password = "68141096@Total";
+$password = "68141096@Total"; // **ALTERE IMEDIATAMENTE** por segurança
 $dbname = "motionfi_bdmotion";
 
-// Criar conexão
+// Cria a conexão com tratamento de erros
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Checar conexão
+// Verifica a conexão
 if ($conn->connect_error) {
-    die("Conexão falhou: " . $conn->connect_error);
+    // Log do erro
+    error_log("Falha na conexão: " . $conn->connect_error);
+    
+    // Redireciona para a página de login com uma mensagem genérica
+    $_SESSION['usuario_logado'] = false;
+    $_SESSION['login_error'] = "Erro na conexão com o banco de dados.";
+    header("Location: ../Login/?error=database_connection");
+    exit();
 }
 
 // Coletar dados do formulário

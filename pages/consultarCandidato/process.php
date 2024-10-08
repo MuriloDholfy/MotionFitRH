@@ -359,10 +359,8 @@ $servername = "<!DOCTYPE html>
 </body>
 </html>
 ";
-$username = "motionfi_contato
-";
+$username = "motionfi_contato";
 $password = "68141096@Total";
-
 $dbname = "motionfi_bdmotion";
 $conn = new mysqli($servername, $username, $password, $dbname);
 

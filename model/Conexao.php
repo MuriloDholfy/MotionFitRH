@@ -4,8 +4,7 @@
             //informação de banco de dados
             $servidor = '50.116.86.123/pages/Login/';
             $banco = 'bdmotion';//nome do database
-            $usuario = 'motionfi_contato
-';
+            $usuario = 'motionfi_contato';
             $senha='';
 
             //função para conectar o servidor

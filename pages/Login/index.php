@@ -47,6 +47,7 @@
     color: #fff;
     transition: color .3s cubic-bezier(.25,.01,.25,1) 0s;
     }
+    
 </style>
 <body>
     <div class="d-flex justify-content-center align-items-center vh-100">

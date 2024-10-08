@@ -17,19 +17,24 @@
 // Iniciar a sessão
 session_start();
 
-// Conectar ao banco de dados
+// Credenciais do banco de dados
 $servername = "50.116.86.123";
-$username = "motionfi_contato
-";
-$password = "68141096@Total";
-
+$username = "motionfi_contato";
+$password = "68141096@Total"; 
 $dbname = "motionfi_bdmotion";
-// Criar conexão
+
+// Cria a conexão com tratamento de erros
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Checar conexão
+// Verifica a conexão
 if ($conn->connect_error) {
-    die("Conexão falhou: " . $conn->connect_error);
+    // Log do erro
+    error_log("Falha na conexão: " . $conn->connect_error);
+    // Redireciona para a página de login com uma mensagem genérica
+    $_SESSION['usuario_logado'] = false;
+    $_SESSION['login_error'] = "Erro na conexão com o banco de dados.";
+    header("Location: ../Login/?error=database_connection");
+    exit();
 }
 
 // Verifica se o usuário está logado
@@ -41,11 +46,10 @@ if (isset($_SESSION['user_id'])) {
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
     $stmt->bind_result($tipoUsuario);
-    
     if ($stmt->fetch()) {
         $_SESSION['tipoUsuario'] = $tipoUsuario;
     } else {
-        $_SESSION['tipoUsuario'] = 'gerenteRegional'; // Definir um valor padrão ou lidar com erro
+        $_SESSION['tipoUsuario'] = 'gerenteRegional'; // Definir um valor padrão ou lidar+ com erro
     }
     $stmt->close();
 } else {
@@ -108,10 +112,9 @@ $conn->close();
 
     <div class="container">
         <?php include '../../components/navBar.php'; ?>
-
+        
         <div class="row p-3">
             <?php include '../../components/sideBar.php'; ?>
-
             <div class="col-md-11">
                 <div class="row">
                     <div class="col-md-8">
@@ -261,7 +264,7 @@ $conn->close();
                             </div>
                         </div>
                         <div class="form-row">
-                            
+
                             <div class="form-group col-md-6">
                                 <label for="especialidade">Especialidade:</label>
                                 <input type="text" class="form-control" id="especialidade" name="especialidade" required>

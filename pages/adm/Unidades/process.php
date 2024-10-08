@@ -57,7 +57,6 @@ if ($action == 'create') {
 
 } elseif ($action == 'restore') {
     $idUnidade = $_POST['idUnidade'];
-
     $stmt = $conn->prepare("UPDATE tbUnidade SET status = 'ativo' WHERE idUnidade = ?");
     if ($stmt === false) {
         $response['message'] = "Erro na preparação da consulta: " . $conn->error;
@@ -74,7 +73,6 @@ if ($action == 'create') {
 
 } elseif ($action == 'delete') {
     $idUnidade = $_POST['idUnidade'];
-
     $stmt = $conn->prepare("DELETE FROM tbUnidade WHERE idUnidade = ?");
     if ($stmt === false) {
         $response['message'] = "Erro na preparação da consulta: " . $conn->error;
