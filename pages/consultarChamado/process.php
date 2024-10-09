@@ -1,8 +1,4 @@
-<?php
-session_start();
-?>
-// Conectar ao banco de dados
-$servername = "<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
