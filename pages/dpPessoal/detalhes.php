@@ -3,50 +3,17 @@
 session_start();
 
 // Conectar ao banco de dados
-$servername = "50.116.86.123";
-$username = "motionfi_contato
-";
-$password = "68141096@Total";
-
+$servername = "50.116.86.120";
+$username = "motionfi_sistemaRH";
+$password = "@Motion123"; // **ALTERE IMEDIATAMENTE** por segurança
 $dbname = "motionfi_bdmotion";
+
 // Criar conexão
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Checar conexão
 if ($conn->connect_error) {
     die("Conexão falhou: " . $conn->connect_error);
-}
-
-// Verifica se o usuário está logado
-if (isset($_SESSION['user_id'])) {
-    // Recuperar o tipo de usuário do banco de dados
-    $user_id = intval($_SESSION['user_id']);
-    $sql = "SELECT tipoUsuario FROM tbUsuario WHERE idUsuario = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result && $result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $_SESSION['tipoUsuario'] = $row['tipoUsuario'];
-    } else {
-        $_SESSION['access_denied'] = true;
-    }
-} else {
-    $_SESSION['access_denied'] = true;
-}
-
-
-
-// Verifica se o acesso foi negado e exibe o modal
-if (isset($_SESSION['access_denied']) && $_SESSION['access_denied'] === true) {
-    echo "<script>
-        document.addEventListener('DOMContentLoaded', function() {
-            $('#acessoNegadoModal').modal('show');
-        });
-    </script>";
-    unset($_SESSION['access_denied']);
 }
 
 // Obter o ID do candidato da URL
@@ -58,8 +25,8 @@ if ($idCandidato > 0) {
     $sql = "SELECT c.idCandidato, c.nomeCandidato, c.emailCandidato, c.telefoneCandidato, 
         c.triagemCandidato, u.idUnidade, u.nomeUnidade, c.dataEntrevista, c.dataAprovacaoEntrevista,
         c.caju, c.registro, c.dataRegistro, c.ponto, c.contratoAssinado
-        FROM tbCandidato c 
-        JOIN tbUnidade u ON c.idUnidade = u.idUnidade
+        FROM tbcandidato c 
+        JOIN tbunidade u ON c.idUnidade = u.idUnidade
         WHERE c.idCandidato = ?";
 
     $stmt = $conn->prepare($sql);
@@ -96,7 +63,7 @@ $conn->close();
     
     <div class="container">
         
-        <?php include '../../components/navBar.php'; ?>
+        <?php include '../../components/navbar.php'; ?>
         
         <div class="row p-3">
             <?php include '../../components/sideBar.php'; ?>
@@ -188,28 +155,8 @@ $conn->close();
     </div>
 </div>
 
-<!-- Modal de Acesso Negado -->
-<div class="modal fade" id="acessoNegadoModal" tabindex="-1" role="dialog" aria-labelledby="acessoNegadoModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="acessoNegadoModalLabel">Acesso Negado</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Você não tem permissão para acessar esta página.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-red" data-dismiss="modal">Fechar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+ <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

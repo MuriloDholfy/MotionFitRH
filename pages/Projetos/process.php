@@ -1,10 +1,8 @@
 <?php
-// Conectar ao banco de dados
-$servername = "50.116.86.123";
-$username = "motionfi_contato
-";
-$password = "68141096@Total";
 
+$servername = "50.116.86.120";
+$username = "motionfi_sistemaRH";
+$password = "@Motion123"; // **ALTERE IMEDIATAMENTE** por segurança
 $dbname = "motionfi_bdmotion";
 // Criar conexão
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -23,7 +21,7 @@ if (isset($_GET['idVaga']) && is_numeric($_GET['idVaga'])) {
     $idVaga = intval($_GET['idVaga']); // Usar intval para evitar SQL Injection
 
     // Consultar o processo da vaga
-    $sql = "SELECT ProcessoVaga FROM tbVaga WHERE idVaga = $idVaga";
+    $sql = "SELECT ProcessoVaga FROM tbvaga WHERE idVaga = $idVaga";
     $result = $conn->query($sql);
 
     if ($result) { // Verificar se a consulta foi bem-sucedida

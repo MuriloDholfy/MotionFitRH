@@ -3,10 +3,11 @@
 session_start();
 
 // Conectar ao banco de dados
-$servername = "50.116.86.123";
-$username = "motionfi_contato";
-$password = "68141096@Total";
+$servername = "50.116.86.120";
+$username = "motionfi_sistemaRH";
+$password = "@Motion123"; // **ALTERE IMEDIATAMENTE** por segurança
 $dbname = "motionfi_bdmotion";
+
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Verificar conexão
@@ -25,12 +26,12 @@ $vaga = $_POST['vaga']; // Recebe o valor da vaga selecionada
 // Verificar se o idUnidade é numérico ou um nome
 if (is_numeric($unidade)) {
     // Se $unidade é um ID, verificar se existe
-    $sql_check = "SELECT idUnidade FROM tbUnidade WHERE idUnidade = ?";
+    $sql_check = "SELECT idUnidade FROM tbunidade WHERE idUnidade = ?";
     $stmt_check = $conn->prepare($sql_check);
     $stmt_check->bind_param("i", $unidade);
 } else {
     // Se $unidade é um nome, verificar se existe
-    $sql_check = "SELECT idUnidade FROM tbUnidade WHERE nomeUnidade = ?";
+    $sql_check = "SELECT idUnidade FROM tbunidade WHERE nomeUnidade = ?";
     $stmt_check = $conn->prepare($sql_check);
     $stmt_check->bind_param("s", $unidade);
 }
@@ -44,8 +45,8 @@ if ($stmt_check->num_rows > 0) {
     $stmt_check->fetch();
     $stmt_check->close(); // Fechar aqui se a unidade já existe
 
-    // Inserir dados na tabela tbCandidato
-    $sql = "INSERT INTO tbCandidato (nomeCandidato, emailCandidato, telefoneCandidato, triagemCandidato, idUnidade, idVaga) 
+    // Inserir dados na tabela tbcandidato
+    $sql = "INSERT INTO tbcandidato (nomeCandidato, emailCandidato, telefoneCandidato, triagemCandidato, idUnidade, idVaga) 
             VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ssssii", $nome, $email, $telefone, $triagem, $idUnidade, $vaga);
@@ -59,7 +60,7 @@ if ($stmt_check->num_rows > 0) {
     $stmt_check->close(); // Fechar aqui se a unidade não existe
 
     // Se o idUnidade não existir, insira uma nova unidade e use o ID gerado
-    $sql_insert_unidade = "INSERT INTO tbUnidade (nomeUnidade) VALUES (?)";
+    $sql_insert_unidade = "INSERT INTO tbunidade (nomeUnidade) VALUES (?)";
     $stmt_insert_unidade = $conn->prepare($sql_insert_unidade);
     $stmt_insert_unidade->bind_param("s", $unidade);
 
@@ -67,8 +68,8 @@ if ($stmt_check->num_rows > 0) {
         $idUnidade = $stmt_insert_unidade->insert_id; // Obter o ID gerado para a nova unidade
         $stmt_insert_unidade->close();
 
-        // Agora insira os dados na tabela tbCandidato usando o $idUnidade
-        $sql = "INSERT INTO tbCandidato (nomeCandidato, emailCandidato, telefoneCandidato, triagemCandidato, idUnidade, idVaga) 
+        // Agora insira os dados na tabela tbcandidato usando o $idUnidade
+        $sql = "INSERT INTO tbcandidato (nomeCandidato, emailCandidato, telefoneCandidato, triagemCandidato, idUnidade, idVaga) 
                 VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("ssssii", $nome, $email, $telefone, $triagem, $idUnidade, $vaga);

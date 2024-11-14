@@ -2,12 +2,11 @@
 header('Content-Type: application/json');
 
 // Conectar ao banco de dados
-$servername = "50.116.86.123";
-$username = "motionfi_contato
-";
-$password = "68141096@Total";
-
+$servername = "50.116.86.120";
+$username = "motionfi_sistemaRH";
+$password = "@Motion123"; // **ALTERE IMEDIATAMENTE** por segurança
 $dbname = "motionfi_bdmotion";
+
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 if ($conn->connect_error) {
@@ -18,13 +17,13 @@ if ($conn->connect_error) {
 $unidade = isset($_GET['unidade']) ? $conn->real_escape_string($_GET['unidade']) : '';
 
 // Contar total de chamados e candidatos
-$sqlChamados = "SELECT COUNT(*) AS totalChamados FROM tbVaga WHERE statusVaga != 'inativo'";
+$sqlChamados = "SELECT COUNT(*) AS totalChamados FROM tbvaga WHERE statusVaga != 'inativo'";
 $sqlCandidatos = "SELECT COUNT(*) AS totalCandidatos FROM tbcandidato ";
 
 // Adicionar filtro de unidade, se necessário
 if ($unidade != '') {
-    $sqlChamados .= " AND idUnidade = (SELECT idUnidade FROM tbUnidade WHERE nomeUnidade = '$unidade')";
-    $sqlCandidatos .= " AND idUnidade = (SELECT idUnidade FROM tbUnidade WHERE nomeUnidade = '$unidade')";
+    $sqlChamados .= " AND idUnidade = (SELECT idUnidade FROM tbunidade WHERE nomeUnidade = '$unidade')";
+    $sqlCandidatos .= " AND idUnidade = (SELECT idUnidade FROM tbunidade WHERE nomeUnidade = '$unidade')";
 }
 
 $resultChamados = $conn->query($sqlChamados);
@@ -34,9 +33,9 @@ $totalChamados = $resultChamados->fetch_assoc()['totalChamados'];
 $totalCandidatos = $resultCandidatos->fetch_assoc()['totalCandidatos'];
 
 // Contar pedidos por status
-$sqlStatus = "SELECT statusVaga, COUNT(*) AS countStatus FROM tbVaga WHERE statusVaga != 'inativo'";
+$sqlStatus = "SELECT statusVaga, COUNT(*) AS countStatus FROM tbvaga WHERE statusVaga != 'inativo'";
 if ($unidade != '') {
-    $sqlStatus .= " AND idUnidade = (SELECT idUnidade FROM tbUnidade WHERE nomeUnidade = '$unidade')";
+    $sqlStatus .= " AND idUnidade = (SELECT idUnidade FROM tbunidade WHERE nomeUnidade = '$unidade')";
 }
 $sqlStatus .= " GROUP BY statusVaga";
 
@@ -54,8 +53,8 @@ while ($row = $resultStatus->fetch_assoc()) {
 
 // Obter o número de chamados por unidade
 $sqlChamadosPorUnidade = "SELECT u.nomeUnidade, COUNT(*) AS totalChamadosPorUnidade 
-                           FROM tbVaga v
-                           JOIN tbUnidade u ON v.idUnidade = u.idUnidade
+                           FROM tbvaga v
+                           JOIN tbunidade u ON v.idUnidade = u.idUnidade
                            WHERE v.statusVaga != 'inativo'";
 
 if ($unidade != '') {
@@ -77,7 +76,7 @@ while ($row = $resultChamadosPorUnidade->fetch_assoc()) {
 // Obter o número de candidatos por unidade
 $sqlCandidatosPorUnidade = "SELECT u.nomeUnidade, COUNT(*) AS totalCandidatosPorUnidade 
                              FROM tbcandidato c
-                             JOIN tbUnidade u ON c.idUnidade = u.idUnidade";
+                             JOIN tbunidade u ON c.idUnidade = u.idUnidade";
 
 if ($unidade != '') {
     $sqlCandidatosPorUnidade .= " WHERE u.nomeUnidade = '$unidade'";

@@ -71,16 +71,15 @@
                 <tbody>
                 <?php
                     // Conectando ao banco de dados MySQL
-                    $servername = "50.116.86.123/pages/Login/";
-                    $username = "motionfi_contato
-";
-                    $password = "68141096@Total";
-
+                    $servername = "50.116.86.120";
+                    $username = "motionfi_sistemaRH";
+                    $password = "@Motion123"; // **ALTERE IMEDIATAMENTE** por segurança
                     $dbname = "motionfi_bdmotion";
-                    // Criando a conexão
+                    
+                    // Criar conexão
                     $conn = new mysqli($servername, $username, $password, $dbname);
-
-                    // Checando a conexão
+            
+                    // Checar conexão
                     if ($conn->connect_error) {
                         die("Conexão falhou: " . $conn->connect_error);
                     }
@@ -93,7 +92,7 @@
                     $offset = ($pagina - 1) * $itensPorPagina;
 
                     // Consulta SQL para contar o número total de candidatos
-                    $sqlTotal = "SELECT COUNT(*) AS total FROM tbCandidato";
+                    $sqlTotal = "SELECT COUNT(*) AS total FROM tbcandidato";
                     $resultTotal = $conn->query($sqlTotal);
                     if (!$resultTotal) {
                         die("Erro na consulta SQL: " . $conn->error);
@@ -105,7 +104,7 @@
                     $totalPaginas = ceil($totalCandidatos / $itensPorPagina);
 
                     // Consulta SQL para buscar os candidatos
-                    $sql = "SELECT idCandidato, nomeCandidato, triagemCandidato, emailCandidato, telefoneCandidato, idUnidade, dataEntrevista, dataAprovacaoEntrevista, dataRegistro, registro, caju, ponto, contratoAssinado, uniforme FROM tbCandidato LIMIT $itensPorPagina OFFSET $offset";
+                    $sql = "SELECT idCandidato, nomeCandidato, triagemCandidato, emailCandidato, telefoneCandidato, idUnidade, dataEntrevista, dataAprovacaoEntrevista, dataRegistro, registro, caju, ponto, contratoAssinado, uniforme FROM tbcandidato LIMIT $itensPorPagina OFFSET $offset";
                     $result = $conn->query($sql);
 
                     // Verificando se há resultados

@@ -1,3 +1,93 @@
+<?php
+session_start();
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Definir as variáveis de conexão
+$servername = "50.116.86.120";
+$username = "motionfi_sistemaRH";
+$password = "@Motion123"; // **ALTERE IMEDIATAMENTE** por segurança
+$dbname = "motionfi_bdmotion";
+
+// Verificar se o usuário está logado
+if (isset($_SESSION['usuario_logado']) && $_SESSION['usuario_logado'] == 1) {
+    // O usuário já está logado, então nada precisa ser feito
+} else {
+    // Conectar ao banco de dados
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    // Verificar conexão
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    // Buscar informações do usuário com base no ID da sessão
+    if (isset($_SESSION['user_id'])) {
+        $user_id = $_SESSION['user_id'];
+        $sql = "SELECT idUsuario, tipoUsuario FROM tbusuario WHERE idUsuario = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $stmt->store_result();
+
+        // Verificar se o usuário existe no banco
+        if ($stmt->num_rows > 0) {
+            // Usuário encontrado, obtendo o tipo
+            $stmt->bind_result($idUsuario, $tipoUsuario);
+            $stmt->fetch();
+
+            // Armazenando o tipo de usuário na sessão
+            $_SESSION['tipoUsuario'] = $tipoUsuario;
+            $_SESSION['usuario_logado'] = true;  // Marca o usuário como logado
+        } else {
+            // Usuário não encontrado no banco de dados
+            $_SESSION['usuario_logado'] = false;
+            header("Location: ../Login/index.php?erro=usuario_invalido");  // Redireciona para o login com mensagem de erro
+            exit();
+        }
+
+        $stmt->close();
+    } else {
+        // Se não houver 'user_id' na sessão, o usuário não está logado
+        $_SESSION['usuario_logado'] = false;
+        header("Location: ../Login/index.php?erro=nao_autorizado");  // Redireciona para o login
+        exit();
+    }
+}
+
+// Agora você pode criar uma nova conexão, já com as variáveis definidas
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Verificar a nova conexão
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch vacancy data
+$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+$sql = "SELECT v.*, u.nomeUnidade FROM tbvaga v JOIN tbunidade u ON v.idUnidade = u.idUnidade WHERE v.idVaga = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Get counts for different statuses in a single query
+$sqlStatusCounts = "SELECT 
+                        COUNT(*) AS totalPedidos, 
+                        SUM(CASE WHEN statusVaga = 'Pendente' THEN 1 ELSE 0 END) AS totalPendente,
+                        SUM(CASE WHEN statusVaga = 'Aprovado' THEN 1 ELSE 0 END) AS totalAprovado,
+                        SUM(CASE WHEN statusVaga = 'Rejeitado' THEN 1 ELSE 0 END) AS totalRejeitado
+                    FROM tbvaga WHERE statusVaga IS NOT NULL";
+$statusCounts = $conn->query($sqlStatusCounts)->fetch_assoc();
+
+// echo "<pre>Tipo de Usuário: " . $_SESSION['tipoUsuario'] . "</pre>";
+// echo "<pre>Status de Login: " . ($_SESSION['usuario_logado'] == 1 ? "Logado" : "Deslogado") . "</pre>";
+// Fechar a conexão
+$conn->close();
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,101 +102,31 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
 </head>
 
 <body style="overflow-y: hidden;"
-<?php
-    // Iniciar a sessão
-    session_start();
 
-    // Verificar se o usuário está autenticado
 
-    // Conectar ao banco de dados
-    $servername = "50.116.86.123";
-    $username = "motionfi_contato
-";
-    $password = "68141096@Total";
-
-    $dbname = "motionfi_bdmotion";
-    // Criar conexão
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    // Checar conexão
-    if ($conn->connect_error) {
-        die("Conexão falhou: " . $conn->connect_error);
-    }
-
-    // Recuperar os últimos 5 pedidos
-    $sql = "SELECT * FROM tbVaga ORDER BY idVaga DESC LIMIT 4";
-    $result = $conn->query($sql);
-
-    // Contar pedidos pendentes
-    $sqlPendente = "SELECT COUNT(*) AS totalPendente FROM tbVaga WHERE statusVaga = 'Pendente'";
-    $resultPendente = $conn->query($sqlPendente);
-    $pendente = $resultPendente->fetch_assoc();
-    $totalPendente = $pendente['totalPendente'];
-
-    // Contar pedidos aprovados
-    $sqlAprovado = "SELECT COUNT(*) AS totalAprovado FROM tbVaga WHERE statusVaga = 'Aprovado'";
-    $resultAprovado = $conn->query($sqlAprovado);
-    $aprovado = $resultAprovado->fetch_assoc();
-    $totalAprovado = $aprovado['totalAprovado'];
-
-    // Contar pedidos rejeitados
-    $sqlRejeitado = "SELECT COUNT(*) AS totalRejeitado FROM tbVaga WHERE statusVaga = 'Rejeitado'";
-    $resultRejeitado = $conn->query($sqlRejeitado);
-    $rejeitado = $resultRejeitado->fetch_assoc();
-    $totalRejeitado = $rejeitado['totalRejeitado'];
-
-    
-    // Fechar a conexão
-    $conn->close();
-    ?>
     <div class="container">
-        <?php include '../../components/navBar.php'; ?>
+        <?php include '../../components/navbar.php'; ?>
 
         <div class="row p-3">
 
             <?php include '../../components/sideBar.php'; ?>
 
             <div class="col-md-11">
-                <div class="row col-md-12 justify-content-end ">
-                    <!-- <div class=" col-md-2">
-                        <div class="select ">
-                            <div class="selected" data-default="All" data-one="option-1" data-two="option-2"
-                            data-three="option-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"
-                            class="arrow">
-                                    <path
-                                    d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z">
-                                </path>
-                            </svg>
-                        </div>
-                        <div class="options">
-                                <div title="Unidade">
-                                    <input id="unidade" name="option" type="radio" checked="" />
-                                    <label class="option" for="unidade" data-txt="unidade"></label>
-                                </div>
-                                <div title="option-1">
-                                    <input id="option-1" name="option" type="radio" />
-                                    <label class="option" for="option-1" data-txt="option-1"></label>
-                                </div>
-                                <div title="option-2">
-                                    <input id="option-2" name="option" type="radio" />
-                                    <label class="option" for="option-2" data-txt="option-2"></label>
-                                </div>
-                                <div title="option-3">
-                                    <input id="option-3" name="option" type="radio" />
-                                    <label class="option" for="option-3" data-txt="option-3"></label>
-                                </div>
+                     <div class="row col-md-12 justify-content-start">
+                            <div class="container mb-4">
+                                <!-- Botão Exportar no canto direito com ícone -->
+                                <button onclick="window.location.href='export.php';" class="btn-green btn btn  mx-3"  style="position: absolute; top: 0px; right: 0;">
+                                    <i class="fas fa-download"></i> Exportar
+                                </button>
+
                             </div>
                         </div>
-                    </div>
-                    <div class=" calendario col-md-2 ml-5">
-                        <input type="date" id="calendario" name="trip-start" />
-                    </div>   -->
-                </div>
-                <div class="row">
+                <div class="row ">
                     <div class="col-md-8">
                             <div class="row">
                                 <div class="col-md-6">
@@ -118,14 +138,13 @@
                                         <small class="text">
                                                     <?php
                                                     // Conectar ao banco de dados
-                                                    $conn = new mysqli('50.116.86.123', 'motionfi_contato
-', '', 'bdmotion');
+                                                    $conn = new mysqli('50.116.86.120', 'motionfi_sistemaRH', '@Motion123', 'motionfi_bdmotion');
                                                     if ($conn->connect_error) {
                                                         die("Conexão falhou: " . $conn->connect_error);
                                                     }
                                                     
                                                     // Contar o número de chamados criados
-                                                    $sql = "SELECT COUNT(*) AS total_chamados FROM tbVaga"; // Verifique se 'tbChamados' é o nome correto da tabela
+                                                    $sql = "SELECT COUNT(*) AS total_chamados FROM tbvaga"; // Verifique se 'tbChamados' é o nome correto da tabela
                                                     $result = $conn->query($sql);
                                                     
                                                     if (!$result) {
@@ -138,7 +157,8 @@
                                                     $conn->close();
                                                     
                                                     ?>
-                                                </small>                                        </div>
+                                                </small>                                      
+                                            </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -150,14 +170,13 @@
                                         <small class="text">
                                                     <?php
                                                     // Conectar ao banco de dados
-                                                    $conn = new mysqli('50.116.86.123', 'motionfi_contato
-', '', 'bdmotion');
+                                                    $conn = new mysqli('50.116.86.120', 'motionfi_sistemaRH', '@Motion123', 'motionfi_bdmotion');
                                                     if ($conn->connect_error) {
                                                         die("Conexão falhou: " . $conn->connect_error);
                                                     }
                                                     
                                                     // Contar o número de chamados criados
-                                                    $sql = "SELECT COUNT(*) AS total_chamados FROM tbCandidato"; // Verifique se 'tbChamados' é o nome correto da tabela
+                                                    $sql = "SELECT COUNT(*) AS total_chamados FROM tbcandidato"; // Verifique se 'tbChamados' é o nome correto da tabela
                                                     $result = $conn->query($sql);
                                                     
                                                     if (!$result) {
@@ -210,11 +229,10 @@
                                 </div>
                                 <?php
                                 // Conectar ao banco de dados
-                                $servername = "50.116.86.123";
-                                $username = "motionfi_contato
-";
-                                $password = "68141096@Total";
-
+                               
+                                $servername = "50.116.86.120";
+                                $username = "motionfi_sistemaRH";
+                                $password = "@Motion123"; // **ALTERE IMEDIATAMENTE** por segurança
                                 $dbname = "motionfi_bdmotion";
                                 // Criar conexão
                                 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -225,7 +243,7 @@
                                 }
 
                                 // Recuperar os últimos 5 pedidos
-                                $sql = "SELECT * FROM tbVaga ORDER BY cargoVaga DESC LIMIT 4";
+                                $sql = "SELECT * FROM tbvaga ORDER BY cargoVaga DESC LIMIT 4";
                                 $result = $conn->query($sql);
 
                                 if ($result->num_rows > 0) {
@@ -248,11 +266,10 @@
                                 </div>
                                     <?php
                                         // Conectar ao banco de dados
-                                        $servername = "50.116.86.123";
-                                        $username = "motionfi_contato
-";
-                                        $password = "68141096@Total";
-
+                                       
+                                        $servername = "50.116.86.120";
+                                        $username = "motionfi_sistemaRH";
+                                        $password = "@Motion123"; // **ALTERE IMEDIATAMENTE** por segurança
                                         $dbname = "motionfi_bdmotion";
                                         // Criar conexão
                                         $conn = new mysqli($servername, $username, $password, $dbname);

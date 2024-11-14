@@ -77,11 +77,23 @@
             case 'home':
                 url = '../Home/index.php';
                 break;
-            case 'dashboard':
-                url = '../Dashboard/index.php';
+            case 'vaga':
+                url = '../Projetos/vagas.php';
                 break;
-            case 'work':
+            case 'vagas':
+                url = '../Projetos/vagas.php';
+                break;
+            case 'dash':
+                url = '../Dash/index.php';
+                break;
+            case 'dashboard':
+                url = '../Dash/index.php';
+                break;
+            case 'RH':
                 url = '../Work/index.php';
+                break;
+            case 'gerente Regional':
+                url = '../Equipe/index.php';
                 break;
             case 'equipe':
                 url = '../Equipe/index.php';

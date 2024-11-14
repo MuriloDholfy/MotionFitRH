@@ -65,12 +65,10 @@
                 <tbody>
                     <?php
                     // Conectando ao banco de dados MySQL
-                    $servername = "50.116.86.123";
-                    $username = "motionfi_contato
-";
-                    $password = "68141096@Total";
-
-                    $dbname = "motionfi_bdmotion";
+	          	$servername = "50.116.86.120";
+			$username = "motionfi_sistemaRH";
+			$password = "@Motion123"; // **ALTERE IMEDIATAMENTE** por segurança
+			$dbname = "motionfi_bdmotion";
                     $conn = new mysqli($servername, $username, $password, $dbname);
 
                     if ($conn->connect_error) {
@@ -81,7 +79,7 @@
                     $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
                     $offset = ($pagina - 1) * $itensPorPagina;
 
-                    $sqlTotal = "SELECT COUNT(*) AS total FROM tbUnidade";
+                    $sqlTotal = "SELECT COUNT(*) AS total FROM tbunidade";
                     $resultTotal = $conn->query($sqlTotal);
                     if (!$resultTotal) {
                         die("Erro na consulta SQL: " . $conn->error);
@@ -90,7 +88,7 @@
                     $totalUnidades = $rowTotal['total'];
                     $totalPaginas = ceil($totalUnidades / $itensPorPagina);
 
-                    $sql = "SELECT idUnidade, nomeUnidade, idRegiao FROM tbUnidade LIMIT $itensPorPagina OFFSET $offset";
+                    $sql = "SELECT idUnidade, nomeUnidade, idRegiao FROM tbunidade LIMIT $itensPorPagina OFFSET $offset";
                     $result = $conn->query($sql);
 
                     if (!$result) {

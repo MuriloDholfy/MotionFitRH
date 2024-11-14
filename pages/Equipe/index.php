@@ -1,14 +1,12 @@
-
 <?php
 session_start();
 
 // Conectar ao banco de dados
-$servername = "50.116.86.123";
-$username = "motionfi_contato
-";
-$password = "68141096@Total";
-
+$servername = "50.116.86.120";
+$username = "motionfi_sistemaRH";
+$password = "@Motion123"; // **ALTERE IMEDIATAMENTE** por segurança
 $dbname = "motionfi_bdmotion";
+
 // Criar conexão
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -17,31 +15,44 @@ if ($conn->connect_error) {
     die("Conexão falhou: " . $conn->connect_error);
 }
 
+// Inicializar a variável tipoUsuario
 // Verifica se o usuário está logado
-if (isset($_SESSION['user_id'])) {
-    // Recuperar o tipo de usuário do banco de dados
-    $user_id = intval($_SESSION['user_id']);
-    $sql = "SELECT tipoUsuario FROM tbUsuario WHERE idUsuario = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result && $result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $_SESSION['tipoUsuario'] = $row['tipoUsuario'];
-
-        // Verifica se o tipo de usuário é gerente ou gerente regional
-        if ($_SESSION['tipoUsuario'] === 'adm' || $_SESSION['tipoUsuario'] === 'gerenteRegional') {
-            $_SESSION['access_denied'] = false;
-        }
-        } else {
-        $_SESSION['access_denied'] = true;
-    }
+if (isset($_SESSION['usuario_logado']) && $_SESSION['usuario_logado'] == true) {
+    $tipoUsuario = $_SESSION['tipoUsuario'];
 } else {
-    $_SESSION['access_denied'] = true;
-}  
+    // Buscar informações do usuário com base no ID da sessão
+    if (isset($_SESSION['user_id'])) {
+        $user_id = $_SESSION['user_id'];
+        $sql = "SELECT idUsuario, tipoUsuario FROM tbusuario WHERE idUsuario = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $stmt->store_result();
 
+        // Verificar se o usuário existe no banco
+        if ($stmt->num_rows > 0) {
+            // Usuário encontrado, obtendo o tipo
+            $stmt->bind_result($idUsuario, $tipoUsuario);
+            $stmt->fetch();
+
+            // Armazenando o tipo de usuário na sessão
+            $_SESSION['tipoUsuario'] = $tipoUsuario;
+            $_SESSION['usuario_logado'] = true;  // Marca o usuário como logado
+        } else {
+            // Usuário não encontrado no banco de dados
+            $_SESSION['usuario_logado'] = false;
+            header("Location: ../Login/index.php?erro=usuario_invalido");  // Redireciona para o login com mensagem de erro
+            exit();
+        }
+
+        $stmt->close();
+    } else {
+        // Se não houver 'user_id' na sessão, o usuário não está logado
+        $_SESSION['usuario_logado'] = false;
+        header("Location: ../Login/index.php?erro=nao_autorizado");  // Redireciona para o login
+        exit();
+    }
+}
 
 // Obter o ID do candidato da URL
 $idCandidato = isset($_GET['id']) ? intval($_GET['id']) : 0;
@@ -51,26 +62,35 @@ if ($idCandidato > 0) {
     // Consulta SQL para recuperar os detalhes do candidato
     $sql = "SELECT c.idCandidato, c.nomeCandidato, c.emailCandidato, c.telefoneCandidato, 
             c.triagemCandidato, u.idUnidade, u.nomeUnidade 
-            FROM tbCandidato c 
-            JOIN tbUnidade u ON c.idUnidade = u.idUnidade
+            FROM tbcandidato c 
+            JOIN tbunidade u ON c.idUnidade = u.idUnidade
             WHERE c.idCandidato = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $idCandidato);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    
+    if ($stmt = $conn->prepare($sql)) {
+        $stmt->bind_param("i", $idCandidato);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-    if ($result->num_rows > 0) {
-        $candidato = $result->fetch_assoc();
+        if ($result->num_rows > 0) {
+            $candidato = $result->fetch_assoc();
+        } else {
+            $_SESSION['mensagem'] = "Candidato não encontrado.";
+        }
+
+        $stmt->close(); // Fecha o statement após o uso
     } else {
-        $_SESSION['mensagem'] = "Candidato não encontrado.";
+        // Em caso de erro ao preparar a query
+        die("Erro ao preparar consulta SQL.");
     }
 } else {
     $_SESSION['mensagem'] = "";
 }
 
-$stmt->close();
+
 $conn->close();
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -128,7 +148,7 @@ $conn->close();
         }
 
         tbody {
-            background-color: transparent;
+            background-color: #ffffff08;
         }
     </style>
 </head>
@@ -137,7 +157,7 @@ $conn->close();
 
     <div class="container">
 
-        <?php include '../../components/navBar.php'; ?>
+        <?php include '../../components/navbar.php'; ?>
 
         <div class="row p-3">
 
@@ -151,10 +171,11 @@ $conn->close();
                     ini_set('display_errors', 1);
 
                     // Conectar ao banco de dados
-                    $servername = "50.116.86.123";
-                    $username = "motionfi_contato";
-                    $password = "68141096@Total";
+                    $servername = "50.116.86.120";
+                    $username = "motionfi_sistemaRH";
+                    $password = "@Motion123"; // **ALTERE IMEDIATAMENTE** por segurança
                     $dbname = "motionfi_bdmotion";
+
 
                     // Criar conexão
                     $conn = new mysqli($servername, $username, $password, $dbname);
@@ -165,7 +186,7 @@ $conn->close();
                     }
 
                     // Obter a lista de unidades para o select
-                    $sql_unidades = "SELECT idUnidade, nomeUnidade FROM tbUnidade";
+                    $sql_unidades = "SELECT idUnidade, nomeUnidade FROM tbunidade";
                     $result_unidades = $conn->query($sql_unidades);
 
                     // Filtrar por unidade se o filtro foi enviado
@@ -183,8 +204,8 @@ $conn->close();
                     // Consulta SQL com filtro por unidade, se selecionado
                     $sql = "SELECT c.idCandidato, c.nomeCandidato, c.emailCandidato, c.telefoneCandidato, 
                             c.triagemCandidato, u.nomeUnidade 
-                            FROM tbCandidato c 
-                            JOIN tbUnidade u ON c.idUnidade = u.idUnidade";
+                            FROM tbcandidato c 
+                            JOIN tbunidade u ON c.idUnidade = u.idUnidade";
                     
                     if ($filtroUnidade != '') {
                         $sql .= " WHERE c.idUnidade = '$filtroUnidade'";
@@ -193,7 +214,7 @@ $conn->close();
                     $sql .= " LIMIT $registros_por_pagina OFFSET $offset";
 
                     // Recuperar o total de registros para calcular o número total de páginas
-                    $sql_total = "SELECT COUNT(*) as total FROM tbCandidato";
+                    $sql_total = "SELECT COUNT(*) as total FROM tbcandidato";
                     if ($filtroUnidade != '') {
                         $sql_total .= " WHERE idUnidade = '$filtroUnidade'";
                     }
@@ -321,25 +342,36 @@ $conn->close();
             </div>
         </div>
     </div>
+    <script>
+        function loadComponent(id) {
+            if (id) {
+                const xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState === 4 && this.status === 200) {
+                        document.getElementById("component-container").innerHTML = this.responseText;
+                    }
+                };
+                xhttp.open("GET", "../../components/" + id + ".php", true);
+                xhttp.send();
+            } else {
+                document.getElementById("component-container").innerHTML = "";
+            }
+        }
 
+        // Verifica o tipo de usuário e exibe o modal de acesso negado, se necessário
+        document.addEventListener("DOMContentLoaded", function() {
+            <?php if (isset($tipoUsuario) && ( $tipoUsuario !== 'gerenteRegional')): ?>
+                // Exibe o modal de acesso negado
+                $('#acessoNegadoModal').modal('show');
+                setTimeout(function() {
+                    window.location.href = '../Home/'; // Redireciona para a página após exibir o modal
+                }, 1000); // Atraso de 1 segundo para garantir que o usuário veja o modal
+            <?php endif; ?>
+        });
+    </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            if (<?php echo isset($_SESSION['access_denied']) && $_SESSION['access_denied'] ? 'true' : 'false'; ?>) {
-                $('#acessoNegadoModal').modal('show');
-                
-                // Espera 1 segundo (1000 ms) e depois redireciona
-                setTimeout(function() {
-                    $('#acessoNegadoModal').modal('hide');
-                    window.location.href = '../Home/';
-                }, 1000);
-            }
-        });
-    </script>
-
-
 </body>
 
 </html>

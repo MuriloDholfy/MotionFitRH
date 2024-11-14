@@ -1,11 +1,10 @@
-
 <?php
 session_start();
 
 // Conectar ao banco de dados
-$servername = "50.116.86.123";
-$username = "motionfi_contato";
-$password = "68141096@Total";
+$servername = "50.116.86.120";
+$username = "motionfi_sistemaRH";
+$password = "@Motion123"; // **ALTERE IMEDIATAMENTE** por segurança
 $dbname = "motionfi_bdmotion";
 
 // Criar conexão
@@ -20,25 +19,41 @@ if ($conn->connect_error) {
 $tipoUsuario = '';
 
 // Verifica se o usuário está logado
-if (isset($_SESSION['user_id'])) {
-    // Recuperar o tipo de usuário do banco de dados
-    $user_id = intval($_SESSION['user_id']);
-    $sql = "SELECT tipoUsuario FROM tbUsuario WHERE idUsuario = $user_id";
-    $result = $conn->query($sql);
-
-    if ($result) {
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            $tipoUsuario = $row['tipoUsuario'];
-            $_SESSION['tipoUsuario'] = $tipoUsuario;
-        } else {
-            $_SESSION['access_denied'] = true;
-        }
-    } else {
-        die("Erro na consulta: " . $conn->error);
-    }
+if (isset($_SESSION['usuario_logado']) && $_SESSION['usuario_logado'] == true) {
+    $tipoUsuario = $_SESSION['tipoUsuario'];
 } else {
-    $_SESSION['access_denied'] = true;
+    // Buscar informações do usuário com base no ID da sessão
+    if (isset($_SESSION['user_id'])) {
+        $user_id = $_SESSION['user_id'];
+        $sql = "SELECT idUsuario, tipoUsuario FROM tbusuario WHERE idUsuario = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $stmt->store_result();
+
+        // Verificar se o usuário existe no banco
+        if ($stmt->num_rows > 0) {
+            // Usuário encontrado, obtendo o tipo
+            $stmt->bind_result($idUsuario, $tipoUsuario);
+            $stmt->fetch();
+
+            // Armazenando o tipo de usuário na sessão
+            $_SESSION['tipoUsuario'] = $tipoUsuario;
+            $_SESSION['usuario_logado'] = true;  // Marca o usuário como logado
+        } else {
+            // Usuário não encontrado no banco de dados
+            $_SESSION['usuario_logado'] = false;
+            header("Location: ../Login/index.php?erro=usuario_invalido");  // Redireciona para o login com mensagem de erro
+            exit();
+        }
+
+        $stmt->close();
+    } else {
+        // Se não houver 'user_id' na sessão, o usuário não está logado
+        $_SESSION['usuario_logado'] = false;
+        header("Location: ../Login/index.php?erro=nao_autorizado");  // Redireciona para o login
+        exit();
+    }
 }
 
 // Fechar a conexão
@@ -47,7 +62,6 @@ $conn->close();
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -56,10 +70,10 @@ $conn->close();
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/workStyle.css">
 </head>
-
 <body>
     <div class="container">
-        <?php include '../../components/navBar.php'; ?>
+
+        <?php include '../../components/navbar.php'; ?>
 
         <div class="row p-3">
             <?php include '../../components/sideBar.php'; ?>
@@ -70,13 +84,11 @@ $conn->close();
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <div class="card-radio">
-                                  
                                     <div class="radio-inputs">
                                         <label class="radio">
                                             <input type="radio" name="radio" id="Rec" onclick="loadComponent(this.id)">
                                             <span class="name">Recrutamento</span>
                                         </label>
-                                        
                                         <label class="radio">
                                             <input type="radio" name="radio" id="Dpp" onclick="loadComponent(this.id)">
                                             <span class="name">DP Pessoal</span>
@@ -86,10 +98,7 @@ $conn->close();
                             </div>
                         </div>
 
-                        <div id="component-container">
-                            <!-- Conteúdo dinâmico será carregado aqui -->
-                        </div>
-                        
+                        <div id="component-container"></div>
                     </div>
                 </div>
             </div>
@@ -110,13 +119,13 @@ $conn->close();
                     <p>Você não tem permissão para acessar esta página.</p>
                 </div>
                 <div class="modal-footer">
-                    <a href="./index.php" class="btn-red btn ">Confirmar</a>
+                    <a href="./index.php" class="btn-red btn">Confirmar</a>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
@@ -136,7 +145,7 @@ $conn->close();
             }
         }
 
-        // Verifica o tipo de usuário e abre o modal se necessário
+        // Verifica o tipo de usuário e exibe o modal de acesso negado, se necessário
         document.addEventListener("DOMContentLoaded", function() {
             <?php if (isset($tipoUsuario) && ($tipoUsuario === 'gerente' || $tipoUsuario === 'gerenteRegional')): ?>
                 // Exibe o modal de acesso negado
@@ -144,10 +153,8 @@ $conn->close();
                 setTimeout(function() {
                     window.location.href = '../Home/'; // Redireciona para a página após exibir o modal
                 }, 1000); // Atraso de 1 segundo para garantir que o usuário veja o modal
-                unset($_SESSION['access_denied']); // Limpa o sinalizador após exibir 
             <?php endif; ?>
         });
     </script>
 </body>
-
 </html>

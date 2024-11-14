@@ -1,9 +1,77 @@
+<?php
+session_start();
 
-   
-   <?php
-    // Iniciar a sessão
-    session_start();
-    ?>
+// Conectar ao banco de dados
+$servername = "50.116.86.120";
+$username = "motionfi_sistemaRH";
+$password = "@Motion123"; // **ALTERE IMEDIATAMENTE** por segurança
+$dbname = "motionfi_bdmotion";
+
+// Criar conexão
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Checar conexão
+if ($conn->connect_error) {
+    die("Conexão falhou: " . $conn->connect_error);
+}
+
+// Inicializar a variável tipoUsuario
+$tipoUsuario = '';
+
+// Verifica se o usuário está logado
+if (isset($_SESSION['usuario_logado']) && $_SESSION['usuario_logado'] == true) {
+    $tipoUsuario = $_SESSION['tipoUsuario'];
+
+    // Verifica se o tipo de usuário é diferente de 'dpPessoal'
+    if ($tipoUsuario != 'dpPessoal') {
+        // Redireciona para a home ou qualquer outra página desejada
+        header("Location: ../Work/index.php");  // Altere para o caminho correto da sua home
+        exit();
+    }
+} else {
+    // Buscar informações do usuário com base no ID da sessão
+    if (isset($_SESSION['user_id'])) {
+        $user_id = $_SESSION['user_id'];
+        $sql = "SELECT idUsuario, tipoUsuario FROM tbusuario WHERE idUsuario = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $stmt->store_result();
+
+        // Verificar se o usuário existe no banco
+        if ($stmt->num_rows > 0) {
+            // Usuário encontrado, obtendo o tipo
+            $stmt->bind_result($idUsuario, $tipoUsuario);
+            $stmt->fetch();
+
+            // Armazenando o tipo de usuário na sessão
+            $_SESSION['tipoUsuario'] = $tipoUsuario;
+            $_SESSION['usuario_logado'] = true;  // Marca o usuário como logado
+
+            // Verifica se o tipo de usuário é diferente de 'dpPessoal'
+            if ($tipoUsuario != 'dpPessoal') {
+                // Redireciona para a home ou qualquer outra página desejada
+                header("Location: ../home/index.php");  // Altere para o caminho correto da sua home
+                exit();
+            }
+        } else {
+            // Usuário não encontrado no banco de dados
+            $_SESSION['usuario_logado'] = false;
+            header("Location: ../Login/index.php?erro=usuario_invalido");  // Redireciona para o login com mensagem de erro
+            exit();
+        }
+
+        $stmt->close();
+    } else {
+        // Se não houver 'user_id' na sessão, o usuário não está logado
+        $_SESSION['usuario_logado'] = false;
+        header("Location: ../Login/index.php?erro=nao_autorizado");  // Redireciona para o login
+        exit();
+    }
+}
+
+$conn->close();
+?>
 
     <!DOCTYPE html>
     <html lang="en">
@@ -60,7 +128,7 @@
 
         <div class="container">
 
-            <?php include '../../components/navBar.php'; ?>
+            <?php include '../../components/navbar.php'; ?>
 
             <div class="row p-3">
 
@@ -74,12 +142,11 @@
                         ini_set('display_errors', 1);
 
                         // Conectar ao banco de dados
-                        $servername = "50.116.86.123";
-                        $username = "motionfi_contato
-";
-                        $password = "68141096@Total";
-
+                        $servername = "50.116.86.120";
+                        $username = "motionfi_sistemaRH";
+                        $password = "@Motion123"; // **ALTERE IMEDIATAMENTE** por segurança
                         $dbname = "motionfi_bdmotion";
+
                         // Criar conexão
                         $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -89,7 +156,7 @@
                         }
 
                         // Obter a lista de unidades para o select
-                        $sql_unidades = "SELECT idUnidade, nomeUnidade FROM tbUnidade";
+                        $sql_unidades = "SELECT idUnidade, nomeUnidade FROM tbunidade";
                         $result_unidades = $conn->query($sql_unidades);
 
                         // Filtrar por unidade se o filtro foi enviado
@@ -107,8 +174,8 @@
                         // Consulta SQL com filtro por unidade, se selecionado
                         $sql = "SELECT c.idCandidato, c.nomeCandidato, c.emailCandidato, c.telefoneCandidato, 
                                 c.triagemCandidato, u.nomeUnidade 
-                                FROM tbCandidato c 
-                                JOIN tbUnidade u ON c.idUnidade = u.idUnidade";
+                                FROM tbcandidato c 
+                                JOIN tbunidade u ON c.idUnidade = u.idUnidade";
                         
                         if ($filtroUnidade != '') {
                             $sql .= " WHERE c.idUnidade = '$filtroUnidade'";
@@ -117,7 +184,7 @@
                         $sql .= " LIMIT $registros_por_pagina OFFSET $offset";
 
                         // Recuperar o total de registros para calcular o número total de páginas
-                        $sql_total = "SELECT COUNT(*) as total FROM tbCandidato";
+                        $sql_total = "SELECT COUNT(*) as total FROM tbcandidato";
                         if ($filtroUnidade != '') {
                             $sql_total .= " WHERE idUnidade = '$filtroUnidade'";
                         }
@@ -223,7 +290,37 @@
                 </ul>
             </nav>
         </div>
-
+        <!-- Modal de Acesso Negado -->
+        <div class="modal fade" id="acessoNegadoModal" tabindex="-1" role="dialog" aria-labelledby="acessoNegadoModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="acessoNegadoModalLabel">Acesso Negado</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Você não tem permissão para acessar esta página.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-red" data-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
-
+       <script>
+    $(document).ready(function() {
+        // Verificando se a sessão 'access_denied' está ativa
+        if (<?php echo isset($_SESSION['access_denied']) && $_SESSION['access_denied'] ? 'true' : 'false'; ?>) {
+            $('#acessoNegadoModal').modal('show');  // Exibindo o modal se a sessão estiver ativa
+            // Após mostrar o modal, podemos limpar a variável de acesso negado para evitar exibições futuras
+            <?php unset($_SESSION['access_denied']); ?>
+        }
+    });
+</script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     </html>

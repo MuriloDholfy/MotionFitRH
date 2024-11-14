@@ -2,15 +2,12 @@
     // Iniciar a sessão
     session_start();
 
-    // Verificar se o usuário está autenticado
-
     // Conectar ao banco de dados
-    $servername = "50.116.86.123";
-    $username = "motionfi_contato
-";
-    $password = "68141096@Total";
-
+    $servername = "50.116.86.120";
+    $username = "motionfi_sistemaRH";
+    $password = "@Motion123"; // **ALTERE IMEDIATAMENTE** por segurança
     $dbname = "motionfi_bdmotion";
+    
     // Criar conexão
     $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -20,23 +17,23 @@
     }
 
     // Recuperar os últimos 5 pedidos
-    $sql = "SELECT * FROM tbVaga ORDER BY idVaga DESC LIMIT 4";
+    $sql = "SELECT * FROM tbvaga ORDER BY idVaga DESC LIMIT 4";
     $result = $conn->query($sql);
 
     // Contar pedidos pendentes
-    $sqlPendente = "SELECT COUNT(*) AS totalPendente FROM tbVaga WHERE statusVaga = 'Pendente'";
+    $sqlPendente = "SELECT COUNT(*) AS totalPendente FROM tbvaga WHERE statusVaga = 'Pendente'";
     $resultPendente = $conn->query($sqlPendente);
     $pendente = $resultPendente->fetch_assoc();
     $totalPendente = $pendente['totalPendente'];
 
     // Contar pedidos aprovados
-    $sqlAprovado = "SELECT COUNT(*) AS totalAprovado FROM tbVaga WHERE statusVaga = 'Aprovado'";
+    $sqlAprovado = "SELECT COUNT(*) AS totalAprovado FROM tbvaga WHERE statusVaga = 'Aprovado'";
     $resultAprovado = $conn->query($sqlAprovado);
     $aprovado = $resultAprovado->fetch_assoc();
     $totalAprovado = $aprovado['totalAprovado'];
 
     // Contar pedidos rejeitados
-    $sqlRejeitado = "SELECT COUNT(*) AS totalRejeitado FROM tbVaga WHERE statusVaga = 'Rejeitado'";
+    $sqlRejeitado = "SELECT COUNT(*) AS totalRejeitado FROM tbvaga WHERE statusVaga = 'Rejeitado'";
     $resultRejeitado = $conn->query($sqlRejeitado);
     $rejeitado = $resultRejeitado->fetch_assoc();
     $totalRejeitado = $rejeitado['totalRejeitado'];
@@ -45,7 +42,8 @@
     // Fechar a conexão
 
     $conn->close();
-    ?>
+?>
+
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -121,14 +119,13 @@
                                         <small class="text">
                                                     <?php
                                                     // Conectar ao banco de dados
-                                                    $conn = new mysqli('50.116.86.123', 'motionfi_contato
-', '', 'bdmotion');
+                                                    $conn = new mysqli('50.116.86.120', 'motionfi_sistemaRH', '@Motion123', 'motionfi_bdmotion');
                                                     if ($conn->connect_error) {
                                                         die("Conexão falhou: " . $conn->connect_error);
                                                     }
                                                     
                                                     // Contar o número de chamados criados
-                                                    $sql = "SELECT COUNT(*) AS total_chamados FROM tbVaga"; // Verifique se 'tbChamados' é o nome correto da tabela
+                                                    $sql = "SELECT COUNT(*) AS total_chamados FROM tbvaga"; // Verifique se 'tbChamados' é o nome correto da tabela
                                                     $result = $conn->query($sql);
                                                     
                                                     if (!$result) {
@@ -141,7 +138,8 @@
                                                     $conn->close();
                                                     
                                                     ?>
-                                                </small>                                        </div>
+                                                </small>                                        
+                                            </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -153,14 +151,13 @@
                                         <small class="text">
                                                     <?php
                                                     // Conectar ao banco de dados
-                                                    $conn = new mysqli('50.116.86.123', 'motionfi_contato
-', '', 'bdmotion');
+                                                    $conn = new mysqli('50.116.86.120', 'motionfi_sistemaRH', '@Motion123', 'motionfi_bdmotion');
                                                     if ($conn->connect_error) {
                                                         die("Conexão falhou: " . $conn->connect_error);
                                                     }
                                                     
                                                     // Contar o número de chamados criados
-                                                    $sql = "SELECT COUNT(*) AS total_chamados FROM tbCandidato"; // Verifique se 'tbChamados' é o nome correto da tabela
+                                                    $sql = "SELECT COUNT(*) AS total_chamados FROM tbcandidato"; // Verifique se 'tbChamados' é o nome correto da tabela
                                                     $result = $conn->query($sql);
                                                     
                                                     if (!$result) {
@@ -213,12 +210,11 @@
                                 </div>
                                 <?php
                                 // Conectar ao banco de dados
-                                $servername = "50.116.86.123";
-                                $username = "motionfi_contato
-";
-                                $password = "68141096@Total";
-
+                                $servername = "50.116.86.120";
+                                $username = "motionfi_sistemaRH";
+                                $password = "@Motion123"; // **ALTERE IMEDIATAMENTE** por segurança
                                 $dbname = "motionfi_bdmotion";
+                                
                                 // Criar conexão
                                 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -228,7 +224,7 @@
                                 }
 
                                 // Recuperar os últimos 5 pedidos
-                                $sql = "SELECT * FROM tbVaga ORDER BY cargoVaga DESC LIMIT 4";
+                                $sql = "SELECT * FROM tbvaga ORDER BY cargoVaga DESC LIMIT 4";
                                 $result = $conn->query($sql);
 
                                 if ($result->num_rows > 0) {
@@ -251,12 +247,11 @@
                                 </div>
                                     <?php
                                         // Conectar ao banco de dados
-                                        $servername = "50.116.86.123";
-                                        $username = "motionfi_contato
-";
-                                        $password = "68141096@Total";
-
+                                        $servername = "50.116.86.120";
+                                        $username = "motionfi_sistemaRH";
+                                        $password = "@Motion123"; // **ALTERE IMEDIATAMENTE** por segurança
                                         $dbname = "motionfi_bdmotion";
+                                        
                                         // Criar conexão
                                         $conn = new mysqli($servername, $username, $password, $dbname);
 

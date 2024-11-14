@@ -1,9 +1,7 @@
 <?php
-$servername = "50.116.86.123";
-$username = "motionfi_contato
-";
-$password = "68141096@Total";
-
+$servername = "50.116.86.120";
+$username = "motionfi_sistemaRH";
+$password = "@Motion123"; // **ALTERE IMEDIATAMENTE** por segurança
 $dbname = "motionfi_bdmotion";
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -22,7 +20,7 @@ if ($action == 'create') {
     $nomeUnidade = $_POST['nomeUnidade'];
     $idRegiao = $_POST['idRegiao'];
 
-    $stmt = $conn->prepare("INSERT INTO tbUnidade (nomeUnidade, idRegiao) VALUES (?, ?)");
+    $stmt = $conn->prepare("INSERT INTO tbunidade (nomeUnidade, idRegiao) VALUES (?, ?)");
     if ($stmt === false) {
         $response['message'] = "Erro na preparação da consulta: " . $conn->error;
     } else {
@@ -41,7 +39,7 @@ if ($action == 'create') {
     $nomeUnidade = $_POST['nomeUnidade'];
     $idRegiao = $_POST['idRegiao'];
 
-    $stmt = $conn->prepare("UPDATE tbUnidade SET nomeUnidade = ?, idRegiao = ? WHERE idUnidade = ?");
+    $stmt = $conn->prepare("UPDATE tbunidade SET nomeUnidade = ?, idRegiao = ? WHERE idUnidade = ?");
     if ($stmt === false) {
         $response['message'] = "Erro na preparação da consulta: " . $conn->error;
     } else {
@@ -57,7 +55,7 @@ if ($action == 'create') {
 
 } elseif ($action == 'restore') {
     $idUnidade = $_POST['idUnidade'];
-    $stmt = $conn->prepare("UPDATE tbUnidade SET status = 'ativo' WHERE idUnidade = ?");
+    $stmt = $conn->prepare("UPDATE tbunidade SET status = 'ativo' WHERE idUnidade = ?");
     if ($stmt === false) {
         $response['message'] = "Erro na preparação da consulta: " . $conn->error;
     } else {
@@ -73,7 +71,7 @@ if ($action == 'create') {
 
 } elseif ($action == 'delete') {
     $idUnidade = $_POST['idUnidade'];
-    $stmt = $conn->prepare("DELETE FROM tbUnidade WHERE idUnidade = ?");
+    $stmt = $conn->prepare("DELETE FROM tbunidade WHERE idUnidade = ?");
     if ($stmt === false) {
         $response['message'] = "Erro na preparação da consulta: " . $conn->error;
     } else {

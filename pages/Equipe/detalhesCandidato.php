@@ -2,14 +2,11 @@
 <?php
 session_start();
 
-// Conectar ao banco de dados
-$servername = "50.116.86.123";
-$username = "motionfi_contato
-";
-$password = "68141096@Total";
-
+$servername = "50.116.86.120";
+$username = "motionfi_sistemaRH";
+$password = "@Motion123"; // **ALTERE IMEDIATAMENTE** por segurança
 $dbname = "motionfi_bdmotion";
-// Criar conexão
+
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Checar conexão
@@ -21,7 +18,7 @@ if ($conn->connect_error) {
 if (isset($_SESSION['user_id'])) {
     // Recuperar o tipo de usuário do banco de dados
     $user_id = intval($_SESSION['user_id']);
-    $sql = "SELECT tipoUsuario FROM tbUsuario WHERE idUsuario = ?";
+    $sql = "SELECT tipoUsuario FROM tbusuario WHERE idUsuario = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
@@ -61,8 +58,8 @@ if ($idCandidato > 0) {
     $sql = "SELECT c.idCandidato, c.nomeCandidato, c.emailCandidato, c.telefoneCandidato, 
             c.triagemCandidato, u.idUnidade, u.nomeUnidade, c.dataEntrevista, c.dataAprovacaoEntrevista,
             c.uniforme
-            FROM tbCandidato c 
-            JOIN tbUnidade u ON c.idUnidade = u.idUnidade
+            FROM tbcandidato c 
+            JOIN tbunidade u ON c.idUnidade = u.idUnidade
             WHERE c.idCandidato = ?";
 
     $stmt = $conn->prepare($sql);
@@ -99,7 +96,7 @@ $conn->close();
     
     <div class="container">
         
-        <?php include '../../components/navBar.php'; ?>
+        <?php include '../../components/navbar.php'; ?>
         
         <div class="row p-3">
             <?php include '../../components/sideBar.php'; ?>

@@ -2,12 +2,11 @@
 session_start();
 
 // Conectar ao banco de dados
-$servername = "50.116.86.123/pages/Login/";
-$username = "motionfi_contato
-";
-$password = "68141096@Total";
-
+$servername = "50.116.86.120";
+$username = "motionfi_sistemaRH";
+$password = "@Motion123"; // **ALTERE IMEDIATAMENTE** por segurança
 $dbname = "motionfi_bdmotion";
+
 // Criar conexão
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -23,7 +22,7 @@ $tipoUsuario = '';
 if (isset($_SESSION['user_id'])) {
     // Recuperar o tipo de usuário do banco de dados
     $user_id = intval($_SESSION['user_id']);
-    $sql = "SELECT tipoUsuario FROM tbUsuario WHERE idUsuario = $user_id";
+    $sql = "SELECT tipoUsuario FROM tbusuario WHERE idUsuario = $user_id";
     $result = $conn->query($sql);
 
     if ($result) {
@@ -42,7 +41,7 @@ if (isset($_SESSION['user_id'])) {
 }
 
 // Obter as vagas com status 'Aprovado' para o select
-$sql_vagas = "SELECT idVaga, nomeVaga FROM tbVaga WHERE statusVaga = 'Aprovado'";
+$sql_vagas = "SELECT idVaga, nomeVaga FROM tbvaga WHERE statusVaga = 'Aprovado'";
 $result_vagas = $conn->query($sql_vagas);
 
 // Fechar a conexão

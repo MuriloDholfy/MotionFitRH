@@ -62,14 +62,14 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     
     <script>
-        // Exibir o carregamento e redirecionar após 2 segundos
+        // Exibir o carregamento e redirecionar ap贸s 2 segundos
         document.addEventListener('DOMContentLoaded', function() {
             // Mostrar o indicador de carregamento
             document.getElementById('loading').style.display = 'block';
 
-            // Redirecionar após 2 segundos
+            // Redirecionar ap贸s 2 segundos
             setTimeout(function() {
-                window.location.href = 'pages/Login/'; // Redireciona para a página de login
+                window.location.href = 'pages/Login/'; // Redireciona para a p谩gina de login
             }, 2000); // 2000 ms = 2 segundos
         });
     </script>

@@ -62,12 +62,11 @@
                 <tbody>
                     <?php
                     // Conectando ao banco de dados MySQL
-                    $servername = "50.116.86.123";
-                    $username = "motionfi_contato
-";
-                    $password = "68141096@Total";
-
+                    $servername = "50.116.86.120";
+                    $username = "motionfi_sistemaRH";
+                    $password = "@Motion123"; // **ALTERE IMEDIATAMENTE** por segurança
                     $dbname = "motionfi_bdmotion";
+
                     // Criando a conexão
                     $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -86,7 +85,7 @@
                     $offset = ($pagina - 1) * $itensPorPagina;
 
                     // Consulta SQL para contar o número total de usuários
-                    $sqlTotal = "SELECT COUNT(*) AS total FROM tbUsuario";
+                    $sqlTotal = "SELECT COUNT(*) AS total FROM tbusuario";
                     $resultTotal = $conn->query($sqlTotal);
                     if (!$resultTotal) {
                         die("Erro na consulta SQL: " . $conn->error);
@@ -98,7 +97,7 @@
                     $totalPaginas = ceil($totalUsuarios / $itensPorPagina);
 
                     // Consulta SQL para buscar os usuários com limite e offset
-                    $sql = "SELECT idUsuario, nome, email, senha, tipoUsuario, data_criacao FROM tbUsuario LIMIT $itensPorPagina OFFSET $offset";
+                    $sql = "SELECT idUsuario, nome, email, senha, tipoUsuario, data_criacao FROM tbusuario LIMIT $itensPorPagina OFFSET $offset";
                     $result = $conn->query($sql);
 
                     // Verificando se a consulta falhou

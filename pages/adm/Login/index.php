@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="../../../css/admStyle.css">
     <link rel="stylesheet" href="../../../css/admLoginStyle.css">
     <link rel="icon" href="./img/icons/navbar/logo.png" type="image/x-icon">
+    <!-- Adicionando o link do Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <style>
    body {
@@ -52,11 +54,16 @@
         <div class="card card-grande">
             <div class="row no-gutters w-100">
                 <div class="direito col-md-6">
+                    
                     <img src="../../../img/adm.png" alt="Imagem de RH" class="card-img mt-5">
+                     <a href="../../Login/" class="btn btn-secondary ">
+                                <i class="fas fa-arrow-left"></i> 
+                    </a> 
                 </div>
                 <div class="esquerdo col-md-6">
                     <div class="card-body d-flex flex-column justify-content-center">
                         <form class="form" action="process.php" method="POST">
+                            
                             <h2 class="form-title">Sign in</h2>
                             <div class="input-container">
                                 <label for="email">EMAIL</label>
@@ -67,7 +74,8 @@
                                 <input placeholder="Digite a senha" type="password" id="senha" name="senha" required>
                             </div>
                             <button class="submit" type="submit">Login</button>
-                            <a href="../../Login/" class="btn btn-secondary mt-2">Back</a> <!-- Botão "Back" como link -->
+                            <!-- Bot���o de Voltar com ���cone -->
+                           
                         </form>
                     </div>
                 </div>

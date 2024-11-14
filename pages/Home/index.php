@@ -1,4 +1,98 @@
+<?php
+session_start();
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Definir as variáveis de conexão
+$servername = "50.116.86.120";
+$username = "motionfi_sistemaRH";
+$password = "@Motion123"; // **ALTERE IMEDIATAMENTE** por segurança
+$dbname = "motionfi_bdmotion";
+
+// Verificar se o usuário está logado
+if (isset($_SESSION['usuario_logado']) && $_SESSION['usuario_logado'] == 1) {
+    // O usuário já está logado, então nada precisa ser feito
+} else {
+    // Conectar ao banco de dados
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    // Verificar conexão
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    // Buscar informações do usuário com base no ID da sessão
+    if (isset($_SESSION['user_id'])) {
+        $user_id = $_SESSION['user_id'];
+        $sql = "SELECT idUsuario, tipoUsuario FROM tbusuario WHERE idUsuario = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $stmt->store_result();
+
+        // Verificar se o usuário existe no banco
+        if ($stmt->num_rows > 0) {
+            // Usuário encontrado, obtendo o tipo
+            $stmt->bind_result($idUsuario, $tipoUsuario);
+            $stmt->fetch();
+
+            // Armazenando o tipo de usuário na sessão
+            $_SESSION['tipoUsuario'] = $tipoUsuario;
+            $_SESSION['usuario_logado'] = true;  // Marca o usuário como logado
+        } else {
+            // Usuário não encontrado no banco de dados
+            $_SESSION['usuario_logado'] = false;
+            header("Location: ../Login/index.php?erro=usuario_invalido");  // Redireciona para o login com mensagem de erro
+            exit();
+        }
+
+        $stmt->close();
+    } else {
+        // Se não houver 'user_id' na sessão, o usuário não está logado
+        $_SESSION['usuario_logado'] = false;
+        header("Location: ../Login/index.php?erro=nao_autorizado");  // Redireciona para o login
+        exit();
+    }
+}
+
+// Agora você pode criar uma nova conexão, já com as variáveis definidas
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Verificar a nova conexão
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch vacancy data
+$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+$sql = "SELECT v.*, u.nomeUnidade FROM tbvaga v JOIN tbunidade u ON v.idUnidade = u.idUnidade WHERE v.idVaga = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Get counts for different statuses in a single query
+$sqlStatusCounts = "SELECT 
+                        COUNT(*) AS totalPedidos, 
+                        SUM(CASE WHEN statusVaga = 'Pendente' THEN 1 ELSE 0 END) AS totalPendente,
+                        SUM(CASE WHEN statusVaga = 'Aprovado' THEN 1 ELSE 0 END) AS totalAprovado,
+                        SUM(CASE WHEN statusVaga = 'Rejeitado' THEN 1 ELSE 0 END) AS totalRejeitado
+                    FROM tbvaga WHERE statusVaga IS NOT NULL";
+$statusCounts = $conn->query($sqlStatusCounts)->fetch_assoc();
+
+$totalPedidos = $statusCounts['totalPedidos'] ?? 0;
+$totalPendente = $statusCounts['totalPendente'] ?? 0;
+$totalAprovado = $statusCounts['totalAprovado'] ?? 0;
+$totalRejeitado = $statusCounts['totalRejeitado'] ?? 0;
+
+// echo "<pre>Tipo de Usuário: " . $_SESSION['tipoUsuario'] . "</pre>";
+// echo "<pre>Status de Login: " . ($_SESSION['usuario_logado'] == 1 ? "Logado" : "Deslogado") . "</pre>";
+
+$conn->close();
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -10,116 +104,29 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/homeStyle.css">
+    <link rel="icon" href="./img/icons/navbar/logo.png" type="image/x-icon">
 </head>
 
 <body>
-<?php
-// Iniciar a sessão
-session_start();
 
-// Credenciais do banco de dados
-$servername = "50.116.86.123";
-$username = "motionfi_contato";
-$password = "68141096@Total"; 
-$dbname = "motionfi_bdmotion";
-
-// Cria a conexão com tratamento de erros
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Verifica a conexão
-if ($conn->connect_error) {
-    // Log do erro
-    error_log("Falha na conexão: " . $conn->connect_error);
-    // Redireciona para a página de login com uma mensagem genérica
-    $_SESSION['usuario_logado'] = false;
-    $_SESSION['login_error'] = "Erro na conexão com o banco de dados.";
-    header("Location: ../Login/?error=database_connection");
-    exit();
-}
-
-// Verifica se o usuário está logado
-if (isset($_SESSION['user_id'])) {
-    // Recuperar o tipo de usuário do banco de dados
-    $user_id = intval($_SESSION['user_id']);
-    $sql = "SELECT tipoUsuario FROM tbusuario WHERE idUsuario = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $stmt->bind_result($tipoUsuario);
-    if ($stmt->fetch()) {
-        $_SESSION['tipoUsuario'] = $tipoUsuario;
-    } else {
-        $_SESSION['tipoUsuario'] = 'gerenteRegional'; // Definir um valor padrão ou lidar+ com erro
-    }
-    $stmt->close();
-} else {
-    $_SESSION['tipoUsuario'] = 'gerenteRegional'; // Definir um valor padrão ou lidar com erro
-}
-
-// Verifica se o usuário é um "gerente regional"
-if (!isset($_SESSION['tipoUsuario']) || $_SESSION['tipoUsuario'] !== 'gerenteRegional') {
-    $_SESSION['gerenteRegional'] = false;
-} else {
-    $_SESSION['gerenteRegional'] = true;
-}
-
-// Obter o ID da URL
-$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-
-// Recuperar dados para o ID específico com JOIN
-$sql = "SELECT v.*, u.nomeUnidade
-        FROM tbVaga v
-        JOIN tbUnidade u ON v.idUnidade = u.idUnidade
-        WHERE v.idVaga = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$result = $stmt->get_result();
-
-if (!$result) {
-    die("Erro na consulta: " . $conn->error);
-}
-
-// Recuperar os últimos 5 pedidos
-$sql = "SELECT * FROM tbVaga ORDER BY idVaga DESC LIMIT 4";
-$result = $conn->query($sql);
-
-// Contar total de pedidos
-$sqlTotalPedidos = "SELECT COUNT(*) AS totalPedidos FROM tbVaga  WHERE statusVaga != 'NULL'";
-$resultTotalPedidos = $conn->query($sqlTotalPedidos);
-$totalPedidos = $resultTotalPedidos->fetch_assoc()['totalPedidos'];
-
-
-
-// Contar pedidos pendentes
-$sqlPendente = "SELECT COUNT(*) AS totalPendente FROM tbVaga WHERE statusVaga = 'Pendente'";
-$resultPendente = $conn->query($sqlPendente);
-$totalPendente = $resultPendente->fetch_assoc()['totalPendente'];
-
-// Contar pedidos aprovados
-$sqlAprovado = "SELECT COUNT(*) AS totalAprovado FROM tbVaga WHERE statusVaga = 'Aprovado'";
-$resultAprovado = $conn->query($sqlAprovado);
-$totalAprovado = $resultAprovado->fetch_assoc()['totalAprovado'];
-
-// Contar pedidos rejeitados
-$sqlRejeitado = "SELECT COUNT(*) AS totalRejeitado FROM tbVaga WHERE statusVaga = 'Rejeitado'";
-$resultRejeitado = $conn->query($sqlRejeitado);
-$totalRejeitado = $resultRejeitado->fetch_assoc()['totalRejeitado'];
-
-// Fechar a conexão
-$conn->close();
-?>
-
-    <div class="container">
-        <?php include '../../components/navBar.php'; ?>
-        
-        <div class="row p-3">
-            <?php include '../../components/sideBar.php'; ?>
-            <div class="col-md-11">
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="row">
-                            <div class="col-md-6">
+<div class="container">
+    <?php include '../../components/navbar.php'; ?>
+    <div class="row p-3">
+        <?php include '../../components/sideBar.php'; ?>
+        <div class="col-md-11">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-6">
+                        <?php if ($_SESSION['tipoUsuario'] == 'gerenteRegional'): ?>
+                                <div class="card-projeto nav-link">
+                                    <a href="../consultarChamado/index.php" class="nav-link">
+                                        <div class="card-body">
+                                            <p class="card-text">Aprovar Vagas</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            <?php else: ?>
                                 <div class="card-projeto nav-link">
                                     <a href="../CriarChamado/index.php" class="nav-link" data-toggle="modal" data-target="#exampleModal">
                                         <div class="card-body">
@@ -127,109 +134,88 @@ $conn->close();
                                         </div>
                                     </a>
                                 </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <?php if ($_SESSION['tipoUsuario'] === 'gerenteRegional') : ?>
-                                    <div class="card-projeto nav-link">
-                                    <a href="../Projetos/vagas.php" class="nav-link">
-                                        <div class="card-body">
-                                            <p class="card-text">Consultar Vagas</p>
-                                        </div>
-                                    </a>
-                                </div>
-                                    <?php else : ?>
-                                        <div class="card-projeto nav-link">
-                                            <a href="../consultarChamado/index.php" class="nav-link">
-                                                <div class="card-body">
-                                                    <p class="card-text">Consultar Vagas</p>
-                                                </div>
-                                            </a>
-                                        </div>
-                                <?php endif; ?>
+                            <?php endif; ?>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card-projeto nav-link">
+                                <a href="../Projetos/vagas.php" class="nav-link">
+                                    <div class="card-body">
+                                        <p class="card-text">Consultar Vagas</p>
+                                    </div>
+                                </a>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="row mt-3">
-                            <div class="col-md-6">
-                                <div class="card-feed">
-                                    <div class="card-body">
-                                        <p class="card-text">Vagas Abertas</p>
-                                    </div>
-                                    <div class="card-footer">
-                                        <small class="text"><?php echo $totalPedidos ?? '0'; ?></small>
-                                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="card-feed">
+                                <div class="card-body">
+                                    <p class="card-text">Vagas Abertas</p>
                                 </div>
-                            </div>
-                        </div>
-
-                        <div class="row mt-3">
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <p class="card-text">Vagas Aprovadas</p>
-                                        <div class="card-footer">
-                                            <small class="text"><?php echo $totalAprovado ?? '0'; ?></small>
-                                        </div>                                        
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <p class="card-text">Vagas Rejeitadas</p>
-                                        <div class="card-footer">
-                                            <small class="text"><?php echo $totalRejeitado ?? '0'; ?></small>
-                                        </div>                                       
-                                    </div>
+                                <div class="card-footer">
+                                    <small class="text"><?php echo $totalPedidos; ?></small>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-md-4">
-                        <div class="card-grande">
-                            <div class="card-body">
-                                <p class="card-text">Histórico de Vagas</p>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <p class="card-text">Vagas Aprovadas</p>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text"><?php echo $totalAprovado; ?></small>
+                                </div>
                             </div>
-                            <?php
-                            // Reabrir a conexão
-                            $conn = new mysqli($servername, $username, $password, $dbname);
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <p class="card-text">Vagas Rejeitadas</p>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text"><?php echo $totalRejeitado; ?></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                            // Recuperar os últimos 5 pedidos
-                            $sql = "SELECT * FROM tbVaga ORDER BY idVaga DESC LIMIT 4";
-                            $result = $conn->query($sql);
-
-                            if ($result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    echo '<div class="card-footer">';
-                                    echo '  <small class="card-text">' . $row['cargoVaga'] . '</small>';
-                                    echo '</div>';
-                                }
-                            } else {
-                                echo '<p>Nenhum pedido encontrado.</p>';
+                <div class="col-md-4">
+                    <div class="card-grande">
+                        <div class="card-body">
+                            <p class="card-text">Histórico de Vagas</p>
+                        </div>
+                        <?php
+                        $conn = new mysqli($servername, $username, $password, $dbname);
+                        $sql = "SELECT * FROM tbvaga ORDER BY idVaga DESC LIMIT 4";
+                        $result = $conn->query($sql);
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                echo '<div class="card-footer"><small class="card-text">' . $row['cargoVaga'] . '</small></div>';
                             }
-
-                            // Fechar a conexão
-                            $conn->close();
-                            ?>
+                        } else {
+                            echo '<p>Nenhum pedido encontrado.</p>';
+                        }
+                        $conn->close();
+                        ?>
+                    </div>
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <p class="card-text">Vagas Pendentes</p>
                         </div>
-                        <div class="card mt-3">
-                            <div class="card-body">
-                                <p class="card-text">Vagas Pendentes</p>
-                            </div>
-                            <div class="card-footer">
-                                <small class="text"><?php echo $totalPendente; ?></small>
-                            </div>
+                        <div class="card-footer">
+                            <small class="text"><?php echo $totalPendente; ?></small>
                         </div>
                     </div>
-                    
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Modal -->
+     <!-- Modal -->
     <div class="modal fade p-4" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -257,6 +243,7 @@ $conn->close();
                                     <option value="jacui">Jacuí</option>
                                     <option value="jardimHelena">Jardim Helena</option>
                                     <option value="piresDoRio">Pires Do Rio</option>
+                                    <option value="holding">Holding</option>
                                     <option value="tatuape">Tatuapé</option>
                                     <option value="peruibe">Peruíbe</option>
                                     <option value="limoeiro">Limoeiro</option>
@@ -264,10 +251,10 @@ $conn->close();
                             </div>
                         </div>
                         <div class="form-row">
-
+                            
                             <div class="form-group col-md-6">
                                 <label for="especialidade">Especialidade:</label>
-                                <input type="text" class="form-control" id="especialidade" name="especialidade" required>
+                                <input type="text" class="form-control" id="especialidade" name="especialidade">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="tipoVaga">Tipo de Vaga:</label>
@@ -277,16 +264,21 @@ $conn->close();
                                 </select>
                             </div>
                         </div>
-                        <div class="form-row">
-                        <input type="hidden" name="user_id" value="<?php echo $_SESSION['user_id']; ?>">
+                        <div class="form-row ">
                             <div class="form-group col-md-3">
-                                <label for="horario">Horário:</label>
-                                <input type="time" class="form-control" id="horario" name="horario" required>
+                                <input type="hidden" name="horarioInicioVaga" value="horarioInicioVaga">
+                                <label for="horarioInicioVaga">Horário Inicio:</label>
+                                <input type="time" class="form-control" id="horarioInicioVaga" name="horarioInicioVaga" required>
                             </div>
-
+                            <div class="form-group col-md-3">
+                                <input type="hidden" name="horarioFinalVaga" value="horarioFinalVaga">
+                                <label for="horarioInicioVaga">Horário Final:</label>
+                                <input type="time" class="form-control" id="horarioFinalVaga" name="horarioFinalVaga" required>
+                            </div>
                             <div class="form-group col-md-3">
                                 <label for="diaSemana">Dia da Semana:</label>
                                 <select class="form-control" id="diaSemana" name="diaSemana" required>
+                                    <option value="Null"> </option>
                                     <option value="Segunda-feira">Segunda-feira</option>
                                     <option value="Terça-feira">Terça-feira</option>
                                     <option value="Quarta-feira">Quarta-feira</option>
@@ -294,9 +286,11 @@ $conn->close();
                                     <option value="Sexta-feira">Sexta-feira</option>
                                     <option value="Sábado">Sábado</option>
                                     <option value="Domingo">Domingo</option>
+                                    
+
                                 </select>
                             </div>
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-3">
                                 <label for="dataAberturaVaga">Abertura de Vaga:</label>
                                 <input type="date" class="form-control" id="dataAberturaVaga" name="dataAberturaVaga" required>
                             </div>

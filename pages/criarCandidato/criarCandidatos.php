@@ -27,7 +27,7 @@
                 <label for="triagem">Triagem</label>
                 <select class="form-control" id="triagem" name="triagem">
                     <option value="Aprovado">Sim</option>
-                    <option value="Rejeitado">Não</option>
+                    <option value="Rejeitado">N達o</option>
                 </select>
             </div>
 ]            <button type="submit" class="btn-green btn btn ml-3">Enviar</button>

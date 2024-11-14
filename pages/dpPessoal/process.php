@@ -2,12 +2,11 @@
 session_start();
 
 // Conectar ao banco de dados
-$servername = "50.116.86.123";
-$username = "motionfi_contato
-";
-$password = "68141096@Total";
-
+$servername = "50.116.86.120";
+$username = "motionfi_sistemaRH";
+$password = "@Motion123"; // **ALTERE IMEDIATAMENTE** por segurança
 $dbname = "motionfi_bdmotion";
+
 // Criar conexão
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -26,7 +25,7 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $contratoAssinado = $_POST['contratoAssinado'] ?? '';
 
     // Atualizar dados do candidato
-    $sql = "UPDATE tbCandidato SET 
+    $sql = "UPDATE tbcandidato SET 
             caju = ?, 
             registro = ?, 
             dataRegistro = ?, 

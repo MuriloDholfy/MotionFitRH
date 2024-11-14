@@ -1,13 +1,11 @@
 <?php
 session_start();
 
-// Conectar ao banco de dados
-$servername = "50.116.86.123";
-$username = "motionfi_contato
-";
-$password = "68141096@Total";
-
+$servername = "50.116.86.120";
+$username = "motionfi_sistemaRH";
+$password = "@Motion123"; // **ALTERE IMEDIATAMENTE** por segurança
 $dbname = "motionfi_bdmotion";
+
 // Criar conexão
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -29,7 +27,7 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $dataAprovacaoEntrevista = $_POST['dataAprovacaoEntrevista'];
 
     // Atualizar a data da entrevista e data de aprovação da entrevista
-    $sql = "UPDATE tbCandidato SET 
+    $sql = "UPDATE tbcandidato SET 
             dataEntrevista = ?, 
             dataAprovacaoEntrevista = ? 
             WHERE idCandidato = ?";

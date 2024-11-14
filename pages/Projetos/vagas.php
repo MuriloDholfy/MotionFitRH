@@ -45,18 +45,24 @@
         }
 
         tbody {
-            background-color: transparent;
+            background-color: #ffffff08;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="container">
-        <?php include '../../components/navBar.php'; ?>
-        <div class="row p-3">
-            <?php include '../../components/sideBar.php'; ?>
-            <div class="col-md-11">
+   <?php
+// Defina o valor de 'tipousuario', isso pode ser obtido de uma variável de sessão ou banco de dados.
+    $_SESSION['tipoUsuario'] = $tipousuario;
+?>
+
+<div class="container">
+    <?php include '../../components/navbar.php'; ?>
+    <div class="row p-3">
+        <?php include '../../components/sideBar.php'; ?>
+        <div class="col-md-11">
+            <?php if ($tipousuario !== 'gerente'): ?>
                 <div class="row col-md-11 justify-content-between">
                     <form method="GET" class="form-inline">
                         <!-- Filtro de Unidade -->
@@ -72,6 +78,7 @@
                                 <option value="jacui">Jacuí</option>
                                 <option value="jardimHelena">Jardim Helena</option>
                                 <option value="piresDoRio">Pires Do Rio</option>
+                                <option value="holding">Holding</option>
                                 <option value="tatuape">Tatuapé</option>
                                 <option value="peruibe">Peruíbe</option>
                                 <option value="limoeiro">Limoeiro</option>
@@ -80,10 +87,10 @@
                         </div>
 
                         <!-- Botão de Submissão -->
-                        <button type="submit" class="btn-green btn  ml-3">Filtrar</button>
+                        <button type="submit" class="btn-green btn ml-3">Filtrar</button>
                     </form>
                 </div>
-
+            <?php endif; ?>
                 <div class="row p-2">
                     <?php
                     // Habilitar exibição de erros para diagnóstico
@@ -91,12 +98,11 @@
                     ini_set('display_errors', 1);
 
                     // Conectar ao banco de dados
-                    $servername = "50.116.86.123";
-                    $username = "motionfi_contato
-";
-                    $password = "68141096@Total";
-
+                    $servername = "50.116.86.120";
+                    $username = "motionfi_sistemaRH";
+                    $password = "@Motion123"; // **ALTERE IMEDIATAMENTE** por segurança
                     $dbname = "motionfi_bdmotion";
+
                     // Criar conexão
                     $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -120,8 +126,8 @@
 
                     // Montando a query com filtros
                     $sql = "SELECT v.*, u.nomeUnidade
-                            FROM tbVaga v
-                            JOIN tbUnidade u ON v.idUnidade = u.idUnidade
+                            FROM tbvaga v
+                            JOIN tbunidade u ON v.idUnidade = u.idUnidade
                             WHERE v.statusVaga IS NOT NULL AND v.statusVaga != ''";
 
                     if ($unidade != '') {
@@ -157,11 +163,12 @@
                         echo '<table class="table table-bordered">';
                         echo '<thead>';
                         echo '  <tr>';
+                        echo '    <th>ID Vaga</th>';
                         echo '    <th>Cargo</th>';
                         echo '    <th>Unidade</th>';
                         echo '    <th>Tipo de Vaga</th>';
                         echo '    <th>Especialidade</th>';
-                        echo '    <th>Horário</th>';
+                        echo '    <th>Horário </th>';
                         echo '    <th>Dia da Semana</th>';
                         echo '    <th>Grau de Emergência</th>';
                         echo '    <th>Tipo de Contrato</th>';
@@ -174,11 +181,13 @@
 
                         while ($row = $result->fetch_assoc()) {
                             // Verificação segura dos valores
+                            $idVaga = isset($row['idVaga']) ? htmlspecialchars($row['idVaga']) : 'N/A';
                             $cargoVaga = isset($row['cargoVaga']) ? htmlspecialchars($row['cargoVaga']) : 'N/A';
                             $nomeUnidade = isset($row['nomeUnidade']) ? htmlspecialchars($row['nomeUnidade']) : 'N/A';
                             $tipoVaga = isset($row['tipoVaga']) ? htmlspecialchars($row['tipoVaga']) : 'N/A';
                             $especialidadeVaga = isset($row['especialidadeVaga']) ? htmlspecialchars($row['especialidadeVaga']) : 'N/A';
-                            $horarioVaga = isset($row['horarioVaga']) ? htmlspecialchars($row['horarioVaga']) : 'N/A';
+                            $horarioInicioVaga = isset($row['horarioInicioVaga']) ? htmlspecialchars($row['horarioInicioVaga']) : 'N/A';
+                            $horarioFinalVaga = isset($row['horarioFinalVaga']) ? htmlspecialchars($row['horarioFinalVaga']) : 'N/A';
                             $diaSemana = isset($row['diaSemana']) ? htmlspecialchars($row['diaSemana']) : 'N/A';
                             $grauEmergencia = isset($row['grauEmergencia']) ? htmlspecialchars($row['grauEmergencia']) : 'N/A';
                             $tipoContrato = isset($row['tipoContrato']) ? htmlspecialchars($row['tipoContrato']) : 'N/A';
@@ -196,11 +205,12 @@
                             }
                         ?>
                         <tr>
+                            <td><?php echo $idVaga; ?></td>
                             <td><?php echo $cargoVaga; ?></td>
                             <td><?php echo $nomeUnidade; ?></td>
                             <td><?php echo $tipoVaga; ?></td>
                             <td><?php echo $especialidadeVaga; ?></td>
-                            <td><?php echo $horarioVaga; ?></td>
+                            <td><?php echo $horarioInicioVaga; ?> - <?php echo $horarioFinalVaga; ?></td>
                             <td><?php echo $diaSemana; ?></td>
                             <td><?php echo $grauEmergencia; ?></td>
                             <td><?php echo $tipoContrato; ?></td>
@@ -209,10 +219,10 @@
                                 <?php
                                 // Array de mapeamento dos IDs para os nomes
                                 $usuarios = [
-                                    1 => 'Isaias Dos Santos',
-                                    2 => 'Raquel Souza',
-                                    3 => 'Marcos Vinicios',
-                                    4 => 'Erika Justino'
+                                    3 => 'Isaias Dos Santos',
+                                    4 => 'Raquel Souza',
+                                    5 => 'Marcos Vinicios',
+                                    6 => 'Erika Justino'
                                 ];
                                 // Verificar e exibir o nome correspondente ao idUsuario
                                 echo isset($usuarios[$idUsuario]) ? $usuarios[$idUsuario] : 'Desconhecido';

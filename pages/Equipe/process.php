@@ -1,25 +1,16 @@
 <?php
-session_start();
 
-// Conectar ao banco de dados
-$servername = "50.116.86.123";
-$username = "motionfi_contato
-";
-$password = "68141096@Total";
-
+$servername = "50.116.86.120";
+$username = "motionfi_sistemaRH";
+$password = "@Motion123"; // **ALTERE IMEDIATAMENTE** por segurança
 $dbname = "motionfi_bdmotion";
+
 // Criar conexão
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Checar conexão
 if ($conn->connect_error) {
     die("Conexão falhou: " . $conn->connect_error);
-}
-
-// Verifica se o usuário está logado e autorizado
-if (!isset($_SESSION['user_id']) || $_SESSION['tipoUsuario'] !== 'gerenteRegional') {
-    header('Location: acessoNegado.php'); // Redireciona para uma página de acesso negado
-    exit();
 }
 
 // Verifica se o ID do candidato e os dados do formulário foram enviados
@@ -31,23 +22,18 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $triagem = $_POST['triagem'];  
     $dataEntrevista = $_POST['dataEntrevista'];  
     $dataAprovacaoEntrevista = $_POST['dataAprovacaoEntrevista'];  
-    $caju = $_POST['caju'];  
-    $registro = $_POST['registro'];  
-    $dataRegistro = $_POST['dataRegistro'];  
-    $ponto = $_POST['ponto'];  
-    $contratoAssinado = $_POST['contratoAssinado'];  
-    $uniforme = $_POST['uniforme'];  
+    $uniforme = isset($_POST['uniforme']) ? $_POST['uniforme'] : null;  // Verifica se o uniforme foi enviado
 
-// Atualize sua consulta SQL de UPDATE para incluir esses campos.
+    // Atualize sua consulta SQL de UPDATE para incluir esses campos.
 
     // Atualizar dados do candidato
-    $sql = "UPDATE tbCandidato SET 
+    $sql = "UPDATE tbcandidato SET 
             nomeCandidato = ?, 
             emailCandidato = ?, 
             telefoneCandidato = ?, 
             triagemCandidato = ?, 
             dataEntrevista = ?, 
-            dataAprovacaoEntrevista = ? 
+            dataAprovacaoEntrevista = ?, 
             uniforme = ? 
             WHERE idCandidato = ?";
 
@@ -65,5 +51,5 @@ if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $conn->close();
 
-header('Location: detalhes.php?id=' . $idCandidato);
+header('Location: detalhesCandidato.php?id=' . $idCandidato);
 exit();
